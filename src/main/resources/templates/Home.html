@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Bookstore</title>
+</head>
+<body>
+    <h1>Bookstore</h1>
+	
+    <form th:action="@{/search}" method="get">
+        <label for="searchBy">Search by:</label>
+        <select id="searchBy" name="searchBy">
+            <option value="category">Category</option>
+            <option value="author">Author</option>
+            <option value="publisher">Publisher</option>
+            <option value="title">Title</option>
+        </select>
+
+        <input type="text" id="query" name="query" placeholder="..." required />
+        <button type="submit">Search</button>
+    </form>
+
+    <br />
+	
+    <table border="1">
+        <thead>
+            <tr>
+                <th>Title</th>
+				<th>Author</th>
+				<th>Price</th>
+				<th>Category</th>
+                <th>Publisher</th>
+                <th>ISBN</th>
+            </tr>
+        </thead>
+        <tbody>
+   
+            <tr th:each="book : ${books}">
+                <td th:text="${book.title}"></td>
+                <td th:text="${book.author}"></td>
+                <td th:text="${book.price}"></td>
+                <td th:text="${book.category}"></td>
+                <td th:text="${book.publisher}"></td>
+                <td th:text="${book.isbn}"></td>
+            </tr>
+        </tbody>
+    </table>
+</body>
+</html>
