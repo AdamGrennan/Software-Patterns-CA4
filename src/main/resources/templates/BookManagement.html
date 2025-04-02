@@ -1,0 +1,82 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <title>Admin Dashboard</title>
+</head>
+<body>
+    <h1>Administrator Dashboard</h1>
+
+    <h2>View & Search Stock</h2>
+    <form th:action="@{/admin/searchStock}" method="get">
+        <label for="searchBy">Search by:</label>
+        <select id="searchBy" name="searchBy">
+            <option value="category">Category</option>
+            <option value="author">Author</option>
+            <option value="publisher">Publisher</option>
+            <option value="title">Title</option>
+        </select>
+        <input type="text" name="query" required />
+        <button type="submit">Search</button>
+    </form>
+
+    <table border="1">
+        <thead>
+            <tr>
+                <th>Title</th>
+                <th>Author</th>
+                <th>Category</th>
+                <th>Publisher</th>
+                <th>Price</th>
+                <th>Stock</th>
+                <th>Update Stock</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr th:each="book : ${books}">
+                <td th:text="${book.title}"></td>
+                <td th:text="${book.author}"></td>
+                <td th:text="${book.category}"></td>
+                <td th:text="${book.publisher}"></td>
+                <td th:text="${book.price}"></td>
+                <td th:text="${book.stock}"></td>
+                <td>
+                    <form th:action="@{/admin/updateStock}" method="post">
+                        <input type="hidden" name="bookId" th:value="${book.id}" />
+                        <input type="number" name="newStock" required />
+                        <button type="submit">Update</button>
+                    </form>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+
+    <h2>Customer Details & Purchase History</h2>
+    <form th:action="@{/admin/searchCustomer}" method="get">
+        <label for="email">Customer Email:</label>
+        <input type="text" name="email" required />
+        <button type="submit">Search</button>
+    </form>
+
+        <table border="1">
+            <thead>
+                <tr>
+                    <th>Book</th>
+                    <th>Quantity</th>
+                    <th>Date</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr th:each="purchase : ${customer.purchases}">
+                    <td th:text="${purchase.bookTitle}"></td>
+                    <td th:text="${purchase.quantity}"></td>
+                    <td th:text="${purchase.date}"></td>
+                </tr>
+            </tbody>
+        </table>
+		<br />
+	    <form th:action="@{/home}" method="get">
+        <button type="submit">Home</button>
+    </form>
+	
+</body>
+</html>

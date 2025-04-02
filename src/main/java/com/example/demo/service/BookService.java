@@ -9,6 +9,14 @@ public interface BookService {
 
 	Book getBookById(Long id);
 	
+	List<Book> getBooksByCategory(String category);
+	
+	List<Book> getBooksByAuthor(String author);
+	
+	List<Book> getBooksByPublisher(String publisher);
+	
+	List<Book> getBooksByTitle(String title);
+	
 	Book addBook(Book book);
 
 	Book updateBook(Long id, Book book);

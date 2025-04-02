@@ -2,12 +2,20 @@ package com.example.demo.service;
 
 import java.util.List;
 
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import com.example.demo.builder.BookBuilder;
+import com.example.demo.builder.BookDirector;
+import com.example.demo.builder.ConcreteBookBuilder;
 import com.example.demo.model.Book;
+import com.example.demo.repository.BookRepository;
 
 @Service
 public class BookServiceImpl implements BookService{
+	
+	@Autowired
+	private BookRepository bookRepository;
 
 	@Override
 	public List<Book> getAllBooks() {
@@ -21,7 +29,20 @@ public class BookServiceImpl implements BookService{
 
 	@Override
 	public Book addBook(Book book) {
-		return null;
+	    BookBuilder builder = new ConcreteBookBuilder(
+	    		book.getTitle(),
+	    		book.getAuthor(),
+	    		book.getPublisher(),
+	    		book.getCategory(),
+	    		book.getIsbn(),
+	    		book.getImage(),
+	    		book.getPrice()
+	        );
+
+	        BookDirector director = new BookDirector(builder);
+	        Book builtBook = director.constructBook();
+
+	        return bookRepository.save(builtBook);
 	}
 
 	@Override
@@ -32,6 +53,26 @@ public class BookServiceImpl implements BookService{
 	@Override
 	public void deleteBook(Long id) {
 		
+	}
+
+	@Override
+	public List<Book> getBooksByCategory(String category) {
+		return null;
+	}
+
+	@Override
+	public List<Book> getBooksByAuthor(String author) {
+		return null;
+	}
+
+	@Override
+	public List<Book> getBooksByPublisher(String publisher) {
+		return null;
+	}
+
+	@Override
+	public List<Book> getBooksByTitle(String title) {
+		return null;
 	}
 
 }
