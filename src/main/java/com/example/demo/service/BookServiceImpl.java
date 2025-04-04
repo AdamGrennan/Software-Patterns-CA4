@@ -57,22 +57,22 @@ public class BookServiceImpl implements BookService{
 
 	@Override
 	public List<Book> getBooksByCategory(String category) {
-		return null;
+		return bookRepository.findByCategoryContainingIgnoreCase(category);
 	}
 
 	@Override
 	public List<Book> getBooksByAuthor(String author) {
-		return null;
+		return bookRepository.findByAuthor(author);
 	}
 
 	@Override
 	public List<Book> getBooksByPublisher(String publisher) {
-		return null;
+		return bookRepository.findByPublisher(publisher);
 	}
 
 	@Override
 	public List<Book> getBooksByTitle(String title) {
-		return null;
+		return bookRepository.findByTitleContainingIgnoreCase(title);
 	}
 
 }
