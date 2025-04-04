@@ -1,5 +1,7 @@
 package com.example.demo.builder;
 
+import com.example.demo.factory.UserAdministrator;
+import com.example.demo.factory.UserCustomer;
 import com.example.demo.model.User;
 
 public class ConcreteUserBuilder implements UserBuilder {
@@ -20,7 +22,15 @@ public class ConcreteUserBuilder implements UserBuilder {
         this.password = password;
         this.address = address;
         this.paymentMethod = paymentMethod;
-        this.user = new User();
+        
+        if (role.equalsIgnoreCase("Administrator")) {
+            this.user = new UserAdministrator();
+        } else if (role.equalsIgnoreCase("Customer")) {
+            this.user = new UserCustomer();
+        } else {
+            this.user = new User();
+            this.user.setRole(role);
+        }
     }
 
     @Override

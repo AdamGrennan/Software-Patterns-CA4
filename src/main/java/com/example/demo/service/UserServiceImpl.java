@@ -1,5 +1,8 @@
 package com.example.demo.service;
 
+import com.example.demo.factory.AdministratorFactory;
+import com.example.demo.factory.CustomerFactory;
+import com.example.demo.factory.Factory;
 import com.example.demo.model.User;
 import com.example.demo.repository.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -9,6 +12,7 @@ import java.util.Optional;
 
 @Service
 public class UserServiceImpl implements UserService {
+	
 	@Autowired
 	private UserRepository userRepository;
 
@@ -28,13 +32,21 @@ public class UserServiceImpl implements UserService {
 		if(existingUser != null) {
 			return null;
 		}else {
-		    return userRepository.save(user);
+			 Factory factory;
+			    if (user.getRole().equalsIgnoreCase("Administrator")) {
+			        factory = new AdministratorFactory();
+			    } else {
+			        factory = new CustomerFactory(); 
+			    }
+
+			    User newUser = factory.createUser(user.getUsername(), user.getEmail(),
+			    		user.getPassword(), user.getAddress(), user.getPaymentMethod());
+		    return userRepository.save(newUser);
 		}
-	
 	}
 	
 	@Override
-	public User loginUser(String email, String password) {
+	public User login(String email, String password) {
 		User user = userRepository.findByEmailAndPassword(email, password);
 		if(user != null) {
 			return user;

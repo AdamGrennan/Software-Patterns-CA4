@@ -10,7 +10,7 @@ public interface UserService {
 	
 	User addUser(User user);
 	
-	User loginUser(String username, String password);
+	User login(String username, String password);
 
 	User updateUser(Long id, User user);
 
