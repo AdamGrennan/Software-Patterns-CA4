@@ -19,6 +19,7 @@
         <button type="submit">Search</button>
     </form>
 
+<!-- 
     <table border="1">
         <thead>
             <tr>
@@ -49,7 +50,7 @@
             </tr>
         </tbody>
     </table>
-
+-->
     <h2>Customer Details & Purchase History</h2>
     <form th:action="@{/admin/searchCustomer}" method="get">
         <label for="email">Customer Email:</label>
@@ -57,25 +58,34 @@
         <button type="submit">Search</button>
     </form>
 
-        <table border="1">
-            <thead>
-                <tr>
-                    <th>Book</th>
-                    <th>Quantity</th>
-                    <th>Date</th>
-                </tr>
-            </thead>
-            <tbody>
-                <tr th:each="purchase : ${customer.purchases}">
-                    <td th:text="${purchase.bookTitle}"></td>
-                    <td th:text="${purchase.quantity}"></td>
-                    <td th:text="${purchase.date}"></td>
-                </tr>
-            </tbody>
-        </table>
+<!-- 
+<div th:if="${customer != null}">
+    <table border="1">
+        <thead>
+            <tr>
+                <th>Book</th>
+                <th>Quantity</th>
+                <th>Date</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr th:each="purchase : ${customer.purchases}">
+                <td th:text="${purchase.bookTitle}"></td>
+                <td th:text="${purchase.quantity}"></td>
+                <td th:text="${purchase.date}"></td>
+            </tr>
+        </tbody>
+    </table>
+</div>
+-->
 		<br />
-	    <form th:action="@{/home}" method="get">
+	    <form th:action="@{/}" method="get">
         <button type="submit">Home</button>
+    </form>
+	
+		 <br />
+		 <form th:action="@{/book_form}" method="get">
+        <button type="submit">Add Book</button>
     </form>
 	
 </body>

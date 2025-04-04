@@ -7,7 +7,6 @@
 </head>
 <body>
     <h1>Bookstore</h1>
-	<img src="/images/shopping-cart.png" alt="Shopping-Cart" style="position: absolute; top: 10px; right: 10px; width: 40px; height: 40px;" />
 	
     <form th:action="@{/search}" method="get">
         <label for="searchBy">Search by:</label>
@@ -51,6 +50,9 @@
                 <td th:text="${book.category}"></td>
                 <td th:text="${book.publisher}"></td>
                 <td th:text="${book.isbn}"></td>
+				<td>
+				<img th:src="${book.image}" alt="Book Image" width="120" height="160"/>
+				</td>
             </tr>
         </tbody>
     </table>

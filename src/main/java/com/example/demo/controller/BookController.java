@@ -14,13 +14,14 @@ import com.example.demo.model.Book;
 import com.example.demo.service.BookService;
 
 @RestController
-@RequestMapping("/api/books")
+@RequestMapping("/books")
 public class BookController {
+	
 	@Autowired
 	private BookService bookService;
 	
-	@PostMapping
-	public ResponseEntity<Book> addBook(@RequestBody Book book) {
+	@PostMapping("/addBook")
+	public ResponseEntity<Book> addBook(Book book) {
 		Book savedBook = bookService.addBook(book);
 		return new ResponseEntity<>(savedBook, HttpStatus.CREATED);
 	}

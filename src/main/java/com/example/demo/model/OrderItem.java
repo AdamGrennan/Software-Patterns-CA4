@@ -14,7 +14,7 @@ public class OrderItem {
 	private Long id;
 
 	@ManyToOne
-	private Order order;
+	private UserOrder order;
 	
 	@ManyToOne
 	private Book book;
@@ -44,10 +44,10 @@ public class OrderItem {
 	public void setBook(Book book) {
 		this.book = book;
 	}
-	public Order getOrder() {
+	public UserOrder getOrder() {
 		return order;
 	}
-	public void setOrder(Order order) {
+	public void setOrder(UserOrder order) {
 		this.order = order;
 	}
 }

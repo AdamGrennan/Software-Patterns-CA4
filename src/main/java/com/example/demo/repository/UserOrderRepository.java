@@ -4,10 +4,10 @@ import java.util.List;
 
 import org.springframework.data.jpa.repository.JpaRepository;
 
-import com.example.demo.model.Order;
+import com.example.demo.model.UserOrder;
 import com.example.demo.model.User;
 
-public interface OrderRepository extends JpaRepository<Order,Long> {
+public interface UserOrderRepository extends JpaRepository<UserOrder,Long> {
 	
-	List<Order> findByUser(User user);
+	List<UserOrder> findByUser(User user);
 }

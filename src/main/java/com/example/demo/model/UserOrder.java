@@ -12,7 +12,7 @@ import jakarta.persistence.ManyToOne;
 import jakarta.persistence.OneToMany;
 
 @Entity
-public class Order {
+public class UserOrder {
 	
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -26,7 +26,7 @@ public class Order {
 	@OneToMany(fetch = FetchType.EAGER)
 	private List<OrderItem> list = new ArrayList<>();
 	
-	public Order() {
+	public UserOrder() {
 		
 	}
 

@@ -9,10 +9,14 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.ResponseBody;
+
 
 import com.example.demo.model.Book;
 import com.example.demo.model.User;
+import com.example.demo.model.UserOrder;
 import com.example.demo.service.BookService;
+import com.example.demo.service.UserOrderService;
 import com.example.demo.service.UserService;
 
 @Controller
@@ -21,46 +25,44 @@ public class WebController {
 	@Autowired
 	private UserService userService;
 	
+	
 	@Autowired
 	private BookService bookService;
 	
-	@GetMapping("/home")
-	public String home() {
-		return "Home";
-	}
 
-	@GetMapping("/register")
+    @GetMapping("/")
+    public String home() {
+    	 return "home";
+    }
+    
+    /**
+    @GetMapping("/administrator")
+	public String administrator(Model model) {
+    	List<UserOrder> purchases = userOrderService.getAllUserOrders();
+    	model.addAttribute("purchases", purchases);
+		return "administrator";
+	}
+	**/
+    
+    @GetMapping("/register")
 	public String register() {
-		return "Register";
+		return "register";
 	}
-
-	@PostMapping("/register")
-	public String addUser(@ModelAttribute User user) {
-		userService.addUser(user);
-		return "redirect:/login";
+    
+	@GetMapping("/administrator")
+	public String administrator() {
+		return "administrator";
 	}
 
 	@GetMapping("/login")
-	public String loginPage() {
-		return "Login";
+	public String login() {
+		return "login";
 	}
-
-	@PostMapping("/login")
-	public String loginUser(@ModelAttribute User user) {
-		User userCheck = userService.loginUser(user.getUsername(), user.getPassword());
-		if(userCheck != null) {
-			return "redirect:/getEmissions";
-		}else {
-			return "Login";
-		}
 	
+	@GetMapping("/book_form")
+	public String book_form() {
+		return "book_form";
 	}
 
-	@GetMapping("/search")
-	public String search(@RequestParam String search, Model model) {
-		List<Book> emissions = bookService.getBooksByCategory(search);
-		model.addAttribute("emissions", emissions);
-		return "Home";
-	}
 
 }
