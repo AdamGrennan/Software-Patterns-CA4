@@ -8,6 +8,12 @@
 <body>
     <h1>Bookstore</h1>
 	
+    <form th:action="@{/administrator}" method="get">
+        <button type="submit">Administrator</button>
+    </form>
+
+    <br />
+	
     <form th:action="@{/books/search}" method="get">
         <label for="searchBy">Search by:</label>
         <select id="searchBy" name="searchBy">
@@ -21,14 +27,24 @@
         <button type="submit">Search</button>
     </form>
 	
-<div style="display: flex; align-items: center; gap: 10px;">
-    <p>Administrator</p>
-    <form th:action="@{/administrator}" method="get">
-        <button type="submit">Submit</button>
-    </form>
-</div>
-
     <br />
+	
+	<form th:action="@{/books/sort}" method="get">
+      <label for="sortBy">Sort by:</label>
+        <select id="sortBy" name="sortBy">
+        <option value="title">Title</option>
+        <option value="author">Author</option>
+        <option value="publisher">Publisher</option>
+        <option value="price">Price</option>
+    </select>
+    <select name="order">
+        <option value="asc">Ascending</option>
+        <option value="desc">Descending</option>
+    </select>
+    <button type="submit">Sort</button>
+</form>
+
+<br/>
 	
     <table border="1">
         <thead>
@@ -39,6 +55,8 @@
 				<th>Category</th>
                 <th>Publisher</th>
                 <th>ISBN</th>
+				<th>Image</th> 
+				<th>Add to Cart</th> 
             </tr>
         </thead>
         <tbody>
@@ -52,6 +70,12 @@
                 <td th:text="${book.isbn}"></td>
 				<td>
 				<img th:src="${book.image}" alt="Book Image" width="120" height="160"/>
+				</td>
+				<td>
+				   <form th:action="@{/addToBasket}" method="post">
+					<input type="hidden" name="bookId"/>
+					<button type="submit">Add To Cart</button>
+					</form>
 				</td>
             </tr>
         </tbody>

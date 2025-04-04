@@ -18,6 +18,12 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.example.demo.model.Book;
 import com.example.demo.service.BookService;
+import com.example.demo.strategy.BookSorter;
+import com.example.demo.strategy.SortByAuthor;
+import com.example.demo.strategy.SortByCategory;
+import com.example.demo.strategy.SortByPrice;
+import com.example.demo.strategy.SortByPublisher;
+import com.example.demo.strategy.SortByTitle;
 
 @Controller
 @RequestMapping("/books")
@@ -56,6 +62,42 @@ public class BookController {
 	    model.addAttribute("books", books);
 	    return "home";
 	}
+	
+	@GetMapping("/sort")
+	public String sortBooks(@RequestParam String sortBy, @RequestParam String order, Model model) {
+	    List<Book> books = bookService.getAllBooks();
+	    BookSorter sorter = new BookSorter();
+	    boolean ascending = order.equalsIgnoreCase("asc");
+	    
+	    switch (sortBy) {
+	        case "title":
+	        	 sorter.setStrategy(new SortByTitle());
+	            break;
+	        case "author":
+	        	sorter.setStrategy(new SortByAuthor());
+	            break;
+	        case "publisher":
+	        	sorter.setStrategy(new SortByPublisher());
+	            break;
+	        case "category":
+	        	sorter.setStrategy(new SortByCategory());
+	            break;
+	        case "price":
+	        	sorter.setStrategy(new SortByPrice());
+	            break;
+	        default:
+	        	books = new ArrayList<>();
+	    }
 
+	    sorter.sortBooks(books, ascending);
+	    model.addAttribute("books", books);
+	    return "home";
+	}
+	
+	@GetMapping("/getAllBooks")
+	public List<Book> getAllBooks() {
+	    return bookService.getAllBooks();
+	}
 
 }
+;

@@ -3,7 +3,7 @@ package com.example.demo.strategy;
 import com.example.demo.model.Book;
 import java.util.List;
 
-public class SortByTitle implements Sorter {
+public class SortByPrice implements Sorter {
     @Override
     public void sort(List<Book> books, boolean ascending) {
         for (int i = 0; i < books.size(); i++) {
@@ -20,7 +20,7 @@ public class SortByTitle implements Sorter {
     private static boolean compare(List<Book> books, int i, int j, boolean ascending) {
     	 Book b1 = books.get(i);
          Book b2 = books.get(j);
-         int result = b1.getTitle().compareToIgnoreCase(b2.getTitle());
+         double result = Double.compare(b1.getPrice(), b2.getPrice());
          if(ascending) {
         	 return result < 0;
          }else {
