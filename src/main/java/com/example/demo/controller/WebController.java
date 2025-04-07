@@ -22,14 +22,6 @@ import com.example.demo.service.UserService;
 @Controller
 public class WebController {
 
-	@Autowired
-	private UserService userService;
-	
-	
-	@Autowired
-	private BookService bookService;
-	
-
     @GetMapping("/")
     public String home() {
     	 return "home";
@@ -53,14 +45,14 @@ public class WebController {
 	public String administrator() {
 		return "administrator";
 	}
-
+	
 	@GetMapping("/login")
 	public String login() {
 		return "login";
 	}
 	
 	@GetMapping("/book_form")
-	public String book_form() {
+	public String bookForm() {
 		return "book_form";
 	}
 

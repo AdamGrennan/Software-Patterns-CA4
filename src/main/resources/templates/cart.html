@@ -1,0 +1,22 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <title>Shopping Cart</title>
+</head>
+<body>
+<h2>Your Cart</h2>
+<table>
+  <tr th:each="book : ${cart.items}">
+    <td th:text="${book.title}">Book Title</td>
+    <td th:text="${book.price}">Price</td>
+  </tr>
+</table>
+<p>Total: <span th:text="${cart.totalPrice}"></span></p>
+
+	<br />
+	    <form th:action="@{/}" method="get">
+        <button type="submit">Home</button>
+    </form>
+	
+</body>
+</html>

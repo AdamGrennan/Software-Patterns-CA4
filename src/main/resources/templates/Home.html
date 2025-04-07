@@ -8,6 +8,14 @@
 <body>
     <h1>Bookstore</h1>
 	
+	<div style="position: absolute; top: 10px; right: 10px;">
+	  <form th:action="@{/cart/viewCart}" method="get">
+	 <button type="submit">
+    <img th:src="@{/images/shopping-cart.png}" alt="Shopping Cart" width="32" height="32"/>
+	</button>
+	</form>
+	</div>
+
     <form th:action="@{/administrator}" method="get">
         <button type="submit">Administrator</button>
     </form>
@@ -72,10 +80,10 @@
 				<img th:src="${book.image}" alt="Book Image" width="120" height="160"/>
 				</td>
 				<td>
-				   <form th:action="@{/addToBasket}" method="post">
-					<input type="hidden" name="bookId"/>
+				<form th:action="@{/cart/addToCart}" method="post">
+					<input type="hidden" name="bookId" th:value="${book.id}" />
 					<button type="submit">Add To Cart</button>
-					</form>
+				</form>
 				</td>
             </tr>
         </tbody>
