@@ -23,6 +23,7 @@ public class User {
 	private String password;
 	private String address;
 	private String paymentMethod;
+	private int loyaltyPoints;
 	
 	public User() {
 		
@@ -74,6 +75,22 @@ public class User {
 
 	public void setRole(String role) {
 		this.role = role;
+	}
+
+	public int getLoyaltyPoints() {
+		return loyaltyPoints;
+	}
+
+	public void setLoyaltyPoints(int loyaltyPoints) {
+		this.loyaltyPoints = loyaltyPoints;
+	}
+
+	public Long getId() {
+		return id;
+	}
+
+	public void setId(Long id) {
+		this.id = id;
 	}
 
 	

@@ -11,10 +11,12 @@ public class ConcreteBookBuilder implements BookBuilder {
     private String category;
     private String isbn;
     private String imageUrl;
+    private int stock;
     private double price;
 
     public ConcreteBookBuilder(String title, String author, String publisher,
-                                String category, String isbn, String imageUrl, double price) {
+                                String category, String isbn, String imageUrl, double price
+                                , int stock) {
         this.title = title;
         this.author = author;
         this.publisher = publisher;
@@ -22,6 +24,7 @@ public class ConcreteBookBuilder implements BookBuilder {
         this.isbn = isbn;
         this.imageUrl = imageUrl;
         this.price = price;
+        this.stock = stock;
         this.book = new Book();
     }
 
@@ -58,6 +61,11 @@ public class ConcreteBookBuilder implements BookBuilder {
     @Override
     public void buildImage() {
         book.setImage(imageUrl);
+    }
+    
+    @Override
+    public void buildStock() {
+        book.setStock(stock);
     }
 
     @Override

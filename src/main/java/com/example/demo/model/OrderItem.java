@@ -18,6 +18,9 @@ public class OrderItem {
 	
 	@ManyToOne
 	private Book book;
+	
+	@ManyToOne
+	private Cart cart;
 
 	private int quantity;
 	private double price;
@@ -49,5 +52,13 @@ public class OrderItem {
 	}
 	public void setOrder(UserOrder order) {
 		this.order = order;
+	}
+
+	public Cart getCart() {
+		return cart;
+	}
+
+	public void setCart(Cart cart) {
+		this.cart = cart;
 	}
 }

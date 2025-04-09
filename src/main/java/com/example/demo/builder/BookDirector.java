@@ -17,6 +17,7 @@ public class BookDirector {
         builder.buildCategory();
         builder.buildIsbn();
         builder.buildImage();
+        builder.buildStock();
         return builder.getResult();
     }
 }

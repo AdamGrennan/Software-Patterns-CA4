@@ -6,4 +6,6 @@ import com.example.demo.model.UserOrder;
 
 public interface UserOrderService {
 	List<UserOrder> getAllUserOrders();
+	
+	public void completeOrder(Long id, String promoCode, boolean usePoints);
 }

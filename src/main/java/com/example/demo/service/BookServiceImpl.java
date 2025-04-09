@@ -1,5 +1,6 @@
 package com.example.demo.service;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -10,6 +11,12 @@ import com.example.demo.builder.BookDirector;
 import com.example.demo.builder.ConcreteBookBuilder;
 import com.example.demo.model.Book;
 import com.example.demo.repository.BookRepository;
+import com.example.demo.strategy.BookSorter;
+import com.example.demo.strategy.SortByAuthor;
+import com.example.demo.strategy.SortByCategory;
+import com.example.demo.strategy.SortByPrice;
+import com.example.demo.strategy.SortByPublisher;
+import com.example.demo.strategy.SortByTitle;
 
 @Service
 public class BookServiceImpl implements BookService{
@@ -36,7 +43,8 @@ public class BookServiceImpl implements BookService{
 	    		book.getCategory(),
 	    		book.getIsbn(),
 	    		book.getImage(),
-	    		book.getPrice()
+	    		book.getPrice(),
+	    		book.getStock()
 	        );
 
 	        BookDirector director = new BookDirector(builder);
@@ -74,5 +82,47 @@ public class BookServiceImpl implements BookService{
 	public List<Book> getBooksByTitle(String title) {
 		return bookRepository.findByTitleContainingIgnoreCase(title);
 	}
+	
+	public List<Book> sortBooks(String sortBy, boolean ascending) {
+		BookSorter sorter = new BookSorter();
+	    
+	    switch (sortBy) {
+	        case "title":
+	        	 sorter.setStrategy(new SortByTitle());
+	            break;
+	        case "author":
+	        	sorter.setStrategy(new SortByAuthor());
+	            break;
+	        case "publisher":
+	        	sorter.setStrategy(new SortByPublisher());
+	            break;
+	        case "category":
+	        	sorter.setStrategy(new SortByCategory());
+	            break;
+	        case "price":
+	        	sorter.setStrategy(new SortByPrice());
+	            break;
+
+	    }
+	    List<Book> books = getAllBooks();
+	    sorter.sortBooks(books, ascending);
+	    return books;
+	}
+	
+	public List<Book> searchBooks(String searchBy, String query) {
+	    switch (searchBy.toLowerCase()) {
+	        case "title":
+	            return getBooksByTitle(query);
+	        case "author":
+	            return getBooksByAuthor(query);
+	        case "publisher":
+	            return getBooksByPublisher(query);
+	        case "category":
+	            return getBooksByCategory(query);
+	        default:
+	            return new ArrayList<>();
+	    }
+	}
+
 
 }

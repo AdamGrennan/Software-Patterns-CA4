@@ -1,0 +1,31 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <title>Item Review</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+    <style>
+        .checked {
+            color: orange;
+        }
+    </style>
+</head>
+<body>
+<h2>Item Review</h2>
+
+<p>Welcome, <span th:text="${user.username}">User</span></p>
+
+<form th:action="@{/users/review}" method="post">
+    <span class="fa fa-star checked"></span>
+    <span class="fa fa-star checked"></span>
+    <span class="fa fa-star checked"></span>
+    <span class="fa fa-star"></span>
+    <span class="fa fa-star"></span>
+
+    <br />
+    <textarea id="comment" name="comment" required></textarea>
+    <br />
+    <button type="submit">Submit</button>
+</form>
+
+</body>
+</html>

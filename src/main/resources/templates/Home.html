@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html xmlns:th="http://www.thymeleaf.org">
+<html xmlns:th="http://www.thymeleaf.org" th:inline="javascript">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -7,21 +7,26 @@
 </head>
 <body>
     <h1>Bookstore</h1>
-	
-	<div style="position: absolute; top: 10px; right: 10px;">
-	  <form th:action="@{/cart/viewCart}" method="get">
-	 <button type="submit">
-    <img th:src="@{/images/shopping-cart.png}" alt="Shopping Cart" width="32" height="32"/>
-	</button>
-	</form>
-	</div>
+
+    <p th:if="${user != null}">
+        Welcome, <span th:text="${user.username}">User</span><br />
+        Loyalty Points: <span th:text="${loyaltyPoints}">0</span>
+    </p>
+
+    <div style="position: absolute; top: 10px; right: 10px;">
+        <form th:action="@{/cart/viewCart}" method="get">
+            <button type="submit">
+                <img th:src="@{/images/shopping-cart.png}" alt="Shopping Cart" width="32" height="32"/>
+            </button>
+        </form>
+    </div>
 
     <form th:action="@{/administrator}" method="get">
         <button type="submit">Administrator</button>
     </form>
 
     <br />
-	
+
     <form th:action="@{/books/search}" method="get">
         <label for="searchBy">Search by:</label>
         <select id="searchBy" name="searchBy">
@@ -30,45 +35,44 @@
             <option value="publisher">Publisher</option>
             <option value="title">Title</option>
         </select>
-
         <input type="text" id="query" name="query" placeholder="..." required />
         <button type="submit">Search</button>
     </form>
-	
+
     <br />
-	
-	<form th:action="@{/books/sort}" method="get">
-      <label for="sortBy">Sort by:</label>
-        <select id="sortBy" name="sortBy">
+
+    <label for="sortBy">Sort by:</label>
+    <select id="sortBy" name="sortBy">
         <option value="title">Title</option>
         <option value="author">Author</option>
         <option value="publisher">Publisher</option>
         <option value="price">Price</option>
     </select>
-    <select name="order">
+
+    <select id="order" name="order">
         <option value="asc">Ascending</option>
         <option value="desc">Descending</option>
     </select>
-    <button type="submit">Sort</button>
-</form>
 
-<br/>
-	
+    <button type="button" onclick="sortBooks()">Sort</button>
+
+    <br/><br/>
+
     <table border="1">
         <thead>
             <tr>
                 <th>Title</th>
-				<th>Author</th>
-				<th>Price</th>
-				<th>Category</th>
+                <th>Author</th>
+                <th>Price</th>
+                <th>Category</th>
                 <th>Publisher</th>
                 <th>ISBN</th>
-				<th>Image</th> 
-				<th>Add to Cart</th> 
+                <th>Stock</th>
+                <th>Image</th>
+                <th>Add to Cart</th>
             </tr>
         </thead>
-        <tbody>
-   
+        <tbody id="bookTableBody">
             <tr th:each="book : ${books}">
                 <td th:text="${book.title}"></td>
                 <td th:text="${book.author}"></td>
@@ -76,17 +80,47 @@
                 <td th:text="${book.category}"></td>
                 <td th:text="${book.publisher}"></td>
                 <td th:text="${book.isbn}"></td>
-				<td>
-				<img th:src="${book.image}" alt="Book Image" width="120" height="160"/>
-				</td>
-				<td>
-				<form th:action="@{/cart/addToCart}" method="post">
-					<input type="hidden" name="bookId" th:value="${book.id}" />
-					<button type="submit">Add To Cart</button>
-				</form>
-				</td>
+                <td th:text="${book.stock}"></td>
+                <td>
+                    <img th:src="${book.image}" alt="Book Image" width="120" height="160"/>
+                </td>
+                <td>
+                       <button type="button" th:onclick="'addBooks(' + ${book.id} + ')'">Add To Cart</button>
+
+                </td>
             </tr>
         </tbody>
     </table>
+
+   <script type="text/javascript">
+        function sortBooks() {
+            var sortBy = document.getElementById("sortBy").value;
+            var order = document.getElementById("order").value;
+            var xmlhttp = new XMLHttpRequest();
+
+            xmlhttp.onreadystatechange = function() {
+                if (xmlhttp.readyState === 4 && xmlhttp.status === 200) {
+                    document.getElementById("bookTableBody").innerHTML = xmlhttp.responseText;
+                }
+            };
+
+            xmlhttp.open("GET", "/api/sort?sortBy=" + sortBy + "&order=" + order, true);
+            xmlhttp.send();
+        }
+		
+		function addBooks(bookId) {
+            var xmlhttp = new XMLHttpRequest();
+
+            xmlhttp.onreadystatechange = function() {
+                if (xmlhttp.readyState === 4 && xmlhttp.status === 200) {
+                    alert("Book added to cart!");
+                }
+            };
+
+              xmlhttp.open("POST", "/cart/addToCart", true);
+			  xmlhttp.setRequestHeader("Content-type","application/x-www-form-urlencoded");
+			  xmlhttp.send("bookId=" + bookId + "&userId=" + [[${user.id}]]);
+        }
+    </script>
 </body>
 </html>

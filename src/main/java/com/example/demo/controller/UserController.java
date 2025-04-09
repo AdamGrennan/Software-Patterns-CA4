@@ -12,6 +12,8 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import com.example.demo.model.User;
 import com.example.demo.service.UserService;
 
+import jakarta.servlet.http.HttpSession;
+
 @Controller
 @RequestMapping("/users")
 public class UserController {
@@ -30,11 +32,12 @@ public class UserController {
 		}
 	}
 	
-	@GetMapping("/login")
-	public String login(User user, Model model) {
+	@PostMapping("/login")
+	public String login(User user, HttpSession session, Model model) {
 		User loginUser = userService.login(user.getEmail(), user.getPassword());
 		if (loginUser != null) {
-			 return "redirect:/";
+			 session.setAttribute("user", loginUser);
+			 return "redirect:/home";
 		} else {
 			model.addAttribute("error", "User  not found.");
 	        return "login"; 

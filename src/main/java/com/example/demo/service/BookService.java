@@ -22,5 +22,9 @@ public interface BookService {
 	Book updateBook(Long id, Book book);
 
 	void deleteBook(Long id);
+	
+	List<Book> sortBooks(String sortBy, boolean ascending);
+	
+	List<Book> searchBooks(String searchBy, String query);
 
 }

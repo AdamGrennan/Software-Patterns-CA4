@@ -5,18 +5,54 @@
 </head>
 <body>
 <h2>Your Cart</h2>
-<table>
-  <tr th:each="book : ${cart.items}">
-    <td th:text="${book.title}">Book Title</td>
-    <td th:text="${book.price}">Price</td>
+
+<p>Welcome, <span th:text="${user.username}">User</span></p>
+
+<table border="1">
+<thead>
+            <tr>
+                <th>Title</th>
+                <th>Price</th>
+                <th>Quantity</th>
+            </tr>
+        </thead>
+  <tr th:each="item : ${books}">
+    <td th:text="${item.book.title}">Book Title</td>
+    <td th:text="${item.book.price}">Price</td>
+	  <td th:text="${item.quantity}">Quantity</td>
+	 <td>
+      <img th:src="${item.book.image}" alt="Book Image" width="120" height="160"/>
+     </td>
+	 <td>
+     <form th:action="@{/cart/removeFromCart}" method="post">
+      <input type="hidden" name="bookId" th:value="${item.book.id}" />
+        <button type="submit">Remove</button>
+         </form>
+     </td>
   </tr>
 </table>
+
 <p>Total: <span th:text="${cart.totalPrice}"></span></p>
 
-	<br />
-	    <form th:action="@{/}" method="get">
-        <button type="submit">Home</button>
-    </form>
-	
+<form th:action="@{/cart/completeOrder}" method="post">
+    <label for="promoCode">Promo Code:</label>
+    <input type="text" id="promoCode" name="promoCode" placeholder="Enter promo code" />
+
+    <br/><br/>
+
+    <input type="checkbox" id="loyaltyPoints" name="loyaltyPoints" value="true" />
+    <label for="usePoints">Use Loyalty Points</label>
+
+    <br/><br/>
+
+    <button type="submit">Complete Order</button>
+</form>
+
+<br />
+
+<form th:action="@{/home}" method="get">
+    <button type="submit">Home</button>
+</form>
+
 </body>
 </html>

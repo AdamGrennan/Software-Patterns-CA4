@@ -11,6 +11,7 @@ public interface BookBuilder {
     void buildCategory();
     void buildIsbn();
     void buildImage();
+    void buildStock();
     Book getResult();
 
 }
