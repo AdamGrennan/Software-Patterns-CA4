@@ -3,6 +3,7 @@ package com.example.demo.templateMethod;
 import com.example.demo.model.Cart;
 import com.example.demo.model.User;
 import com.example.demo.model.UserOrder;
+import com.example.demo.repository.CartRepository;
 import com.example.demo.repository.UserOrderRepository;
 import com.example.demo.repository.UserRepository;
 
@@ -11,8 +12,9 @@ public class LoyaltyPurchase extends Purchase {
 	private final UserOrderRepository orderRepository;
     private final UserRepository userRepository;
 
-    public LoyaltyPurchase(UserOrderRepository orderRepository, UserRepository userRepository, Cart cart) {
-        super(cart);
+    public LoyaltyPurchase(UserOrderRepository orderRepository, UserRepository userRepository, 
+    		Cart cart, CartRepository cartRepository) {
+        super(cart, cartRepository);
     	this.orderRepository = orderRepository;
         this.userRepository = userRepository;
     }

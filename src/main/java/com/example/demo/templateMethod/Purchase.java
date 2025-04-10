@@ -2,6 +2,10 @@ package com.example.demo.templateMethod;
 
 import com.example.demo.model.User;
 import com.example.demo.model.UserOrder;
+import com.example.demo.repository.CartRepository;
+
+import org.springframework.beans.factory.annotation.Autowired;
+
 import com.example.demo.model.Cart;
 import com.example.demo.model.OrderItem;
 
@@ -9,9 +13,13 @@ public abstract class Purchase {
 	
 	private Cart cart;
 	
-	public Purchase(Cart cart) {
-		this.cart = cart;
-	}
+    @Autowired
+    private CartRepository cartRepository; 
+	
+    public Purchase(Cart cart, CartRepository cartRepository) {
+        this.cart = cart;
+        this.cartRepository = cartRepository;
+    }
 
     public final void completeOrder(UserOrder order) {
         validateCart();
@@ -57,5 +65,8 @@ public abstract class Purchase {
 
     protected void clearCart() {
         cart.getList().clear();
+        cart.setTotalPrice(0);
+        cartRepository.save(cart);
     }
+
 }

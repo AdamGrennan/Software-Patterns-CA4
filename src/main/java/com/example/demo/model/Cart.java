@@ -22,7 +22,7 @@ public class Cart {
 	@OneToOne
 	User user;
 	
-	@OneToMany(mappedBy = "cart", cascade = CascadeType.ALL)
+	@OneToMany(mappedBy = "cart", cascade = CascadeType.ALL, fetch = FetchType.EAGER)
 	private List<OrderItem> list = new ArrayList<>();
 	
 	private double totalPrice;
@@ -53,5 +53,13 @@ public class Cart {
 
 	public void setTotalPrice(double totalPrice) {
 		this.totalPrice = totalPrice;
+	}
+
+	public Long getId() {
+		return id;
+	}
+
+	public void setId(Long id) {
+		this.id = id;
 	}
 }

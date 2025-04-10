@@ -29,20 +29,15 @@ public class CartController {
 	private CartService cartService;
 	
 	@Autowired
-	private BookService bookService;
-	
-	@Autowired
 	private UserOrderService orderService;
 	
-	@Autowired
-	private UserService userService;
 
 	@PostMapping("/addToCart")
 	@ResponseBody
-	public String addToCart(@RequestParam Long bookId, @RequestParam Long userId) {
-	    Book book = bookService.getBookById(bookId);
-	    User user = userService.getUserById(userId);
-	    cartService.addToCart(user, book);
+	public String addToCart(@RequestParam Long bookId, HttpSession session) {
+		User user = (User) session.getAttribute("user");
+		cartService.addToCart(user.getId(), bookId);
+
 	    return "Book added successfully";
 	}
 	

@@ -1,9 +1,11 @@
 package com.example.demo.model;
 
 import jakarta.persistence.Entity;
+import jakarta.persistence.FetchType;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
+import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
 
 @Entity
@@ -16,11 +18,14 @@ public class OrderItem {
 	@ManyToOne
 	private UserOrder order;
 	
-	@ManyToOne
+	@ManyToOne(fetch = FetchType.EAGER)
 	private Book book;
+
 	
 	@ManyToOne
+	@JoinColumn(name = "cart_id")
 	private Cart cart;
+
 
 	private int quantity;
 	private double price;

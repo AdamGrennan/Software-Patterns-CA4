@@ -50,11 +50,11 @@ public class UserOrderServiceImpl implements UserOrderService {
 		Purchase purchase;
 
         if (promoCode != null && !promoCode.isEmpty()) {
-            purchase = new PromoPurchase(orderRepository, userRepository, promoCode, cart);
+            purchase = new PromoPurchase(orderRepository, userRepository, promoCode, cart, cartRepository);
         } else if (usePoints && user.getLoyaltyPoints() >= 100) {
-            purchase = new LoyaltyPurchase(orderRepository, userRepository, cart);
+            purchase = new LoyaltyPurchase(orderRepository, userRepository, cart, cartRepository);
         } else {
-            purchase = new RegularPurchase(orderRepository, userRepository, cart);
+            purchase = new RegularPurchase(orderRepository, userRepository, cart, cartRepository);
         }
         
         for (OrderItem item : cart.getList()) {
@@ -66,6 +66,8 @@ public class UserOrderServiceImpl implements UserOrderService {
 
 
         purchase.completeOrder(order);
+        cart.getList().clear();
+        cart.setTotalPrice(0);
         cartRepository.save(cart);
 	}
 }

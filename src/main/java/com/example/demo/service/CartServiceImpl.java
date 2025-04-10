@@ -2,6 +2,7 @@ package com.example.demo.service;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.web.bind.annotation.RequestParam;
 
 import com.example.demo.model.Book;
 import com.example.demo.model.Cart;
@@ -19,12 +20,22 @@ public class CartServiceImpl implements CartService{
 	@Autowired
 	private OrderItemRepository orderItemRepository;
 	
+	@Autowired
+	private UserService userService;
+	
+	@Autowired
+	private BookService bookService;
+	
 	@Override
-	public Cart addToCart(User user, Book book) {
+	public Cart addToCart(Long bookId, Long userId) {
+	    Book book = bookService.getBookById(bookId);
+	    User user = userService.getUserById(userId);
+
 	    Cart cart = cartRepository.findByUser(user);
 	    if (cart == null) {
 	        cart = new Cart();
 	        cart.setUser(user);
+	        cart = cartRepository.save(cart); // Save so cart has an ID
 	    }
 
 	    OrderItem item = new OrderItem();
@@ -33,28 +44,38 @@ public class CartServiceImpl implements CartService{
 	    item.setPrice(book.getPrice());
 	    item.setCart(cart);
 
-	    cart.getList().add(item);
-	    return cartRepository.save(cart);
+	    orderItemRepository.save(item);
+
+	    return cartRepository.findByUser(user); // Reload cart with updated list
 	}
 
+
+
+	@Override
 	public Cart getCart(User user) {
 	    Cart cart = cartRepository.findByUser(user);
 	    if (cart == null) {
 	        cart = new Cart();
 	        cart.setUser(user);
-	        double totalPrice = 0;
-		    for (OrderItem item : cart.getList()) {
-		        totalPrice += item.getPrice();
-		    }
-
-		    cart.setTotalPrice(totalPrice); 
-	        cartRepository.save(cart);
+	        cart.setTotalPrice(0);
+	        return cart;
 	    }
+
+	    // 🛠 Force manual loading of items
+	    cart.setList(orderItemRepository.findByCart(cart));
+
+	    // 🧮 Recalculate total
+	    double totalPrice = 0;
+	    for (OrderItem item : cart.getList()) {
+	        totalPrice += item.getPrice();
+	    }
+
+	    cart.setTotalPrice(totalPrice);
 	    return cart;
 	}
+
+
 	
-
-
 	@Override
 	public void removeFromCart(User user, Long bookId) {
 	    Cart cart = cartRepository.findByUser(user);
