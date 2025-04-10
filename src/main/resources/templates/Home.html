@@ -13,13 +13,20 @@
         Loyalty Points: <span th:text="${loyaltyPoints}">0</span>
     </p>
 
-    <div style="position: absolute; top: 10px; right: 10px;">
-        <form th:action="@{/cart/viewCart}" method="get">
-            <button type="submit">
-                <img th:src="@{/images/shopping-cart.png}" alt="Shopping Cart" width="32" height="32"/>
-            </button>
-        </form>
-    </div>
+<div style="position: absolute; top: 10px; right: 10px; display: flex; gap: 10px;">
+    <form th:action="@{/cart/viewCart}" method="get">
+        <button type="submit">
+            <img th:src="@{/images/shopping-cart.png}" alt="Shopping Cart" width="32" height="32"/>
+        </button>
+    </form>
+
+    <form th:action="@{/orders/viewOrders}" method="get">
+        <button type="submit">
+            <img th:src="@{/images/orders.png}" alt="User Orders" width="32" height="32"/>
+        </button>
+    </form>
+</div>
+
 
     <br />
 
@@ -66,6 +73,7 @@
                 <th>Stock</th>
                 <th>Image</th>
                 <th>Add to Cart</th>
+				<th>Reviews</th>
             </tr>
         </thead>
         <tbody id="bookTableBody">
@@ -84,9 +92,18 @@
                        <button type="button" th:onclick="'addBooks(' + ${book.id} + ')'">Add To Cart</button>
 
                 </td>
+				 <td>
+                       <form th:action="@{/}" method="get">
+						<button type="submit">Reviews</button>
+                </td>
             </tr>
         </tbody>
     </table>
+	
+	<br />
+		 <form th:action="@{/}" method="get">
+        <button type="submit">Logout</button>
+    </form>
 
    <script type="text/javascript">
         function sortBooks() {
@@ -115,7 +132,7 @@
 
               xmlhttp.open("POST", "/cart/addToCart", true);
 			  xmlhttp.setRequestHeader("Content-type","application/x-www-form-urlencoded");
-			  xmlhttp.send("bookId=" + bookId + "&userId=" + [[${user.id}]]);
+			  xmlhttp.send("bookId=" + bookId);
         }
     </script>
 </body>

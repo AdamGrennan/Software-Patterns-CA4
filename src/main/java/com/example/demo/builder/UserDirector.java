@@ -9,7 +9,7 @@ public class UserDirector {
         this.builder = builder;
     }
 
-    public User constructBook() {
+    public User constructUser() {
         builder.buildUsername();
         builder.buildEmail();
         builder.buildRole();

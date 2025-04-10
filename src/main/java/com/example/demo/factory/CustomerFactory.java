@@ -11,6 +11,6 @@ public class CustomerFactory extends Factory {
                            String address, String paymentMethod) {
         UserBuilder builder = new ConcreteUserBuilder(username, email, "Customer", password, address, paymentMethod);
         UserDirector director = new UserDirector(builder);
-        return director.constructBook(); 
+        return director.constructUser(); 
     }
 }

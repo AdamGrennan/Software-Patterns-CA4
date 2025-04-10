@@ -5,20 +5,19 @@ import com.example.demo.model.UserOrder;
 import com.example.demo.repository.CartRepository;
 import com.example.demo.repository.UserOrderRepository;
 import com.example.demo.repository.UserRepository;
+import com.example.demo.service.CartItemService;
 
 public class RegularPurchase extends Purchase {
 
 	private final UserOrderRepository orderRepository;
     private final UserRepository userRepository;
 
-    public RegularPurchase(UserOrderRepository orderRepository, UserRepository userRepository, 
-    		Cart cart, CartRepository cartRepository) {
-        super(cart, cartRepository);
-        this.orderRepository = orderRepository;
-        this.userRepository = userRepository;
-    }
-
-
+    public RegularPurchase(UserOrderRepository orderRepository, UserRepository userRepository,
+            Cart cart, CartRepository cartRepository, CartItemService itemService) {
+    		super(cart, cartRepository, itemService);
+    		this.orderRepository = orderRepository;
+    		this.userRepository = userRepository;
+    		}
 
     @Override
     protected void saveOrder(UserOrder order) {

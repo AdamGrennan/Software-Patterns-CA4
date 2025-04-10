@@ -6,8 +6,10 @@ import org.springframework.web.bind.annotation.RequestParam;
 
 import com.example.demo.model.Book;
 import com.example.demo.model.Cart;
+import com.example.demo.model.CartItem;
 import com.example.demo.model.OrderItem;
 import com.example.demo.model.User;
+import com.example.demo.repository.CartItemRepository;
 import com.example.demo.repository.CartRepository;
 import com.example.demo.repository.OrderItemRepository;
 
@@ -18,7 +20,7 @@ public class CartServiceImpl implements CartService{
 	private CartRepository cartRepository;
 	
 	@Autowired
-	private OrderItemRepository orderItemRepository;
+	private CartItemService itemService;
 	
 	@Autowired
 	private UserService userService;
@@ -35,21 +37,25 @@ public class CartServiceImpl implements CartService{
 	    if (cart == null) {
 	        cart = new Cart();
 	        cart.setUser(user);
-	        cart = cartRepository.save(cart); // Save so cart has an ID
+	        cart = cartRepository.save(cart);
+	    }
+	    for (CartItem existingItem : cart.getList()) {
+	        if (existingItem.getBook().getId().equals(bookId)) {
+	            existingItem.setQuantity(existingItem.getQuantity() + 1);
+	            itemService.addCartItem(existingItem);
+	            return cartRepository.findByUser(user); 
+	        }
 	    }
 
-	    OrderItem item = new OrderItem();
+	    CartItem item = new CartItem();
 	    item.setBook(book);
 	    item.setQuantity(1);
 	    item.setPrice(book.getPrice());
 	    item.setCart(cart);
 
-	    orderItemRepository.save(item);
-
-	    return cartRepository.findByUser(user); // Reload cart with updated list
+	    itemService.addCartItem(item);
+	    return cartRepository.findByUser(user);
 	}
-
-
 
 	@Override
 	public Cart getCart(User user) {
@@ -61,12 +67,10 @@ public class CartServiceImpl implements CartService{
 	        return cart;
 	    }
 
-	    // 🛠 Force manual loading of items
-	    cart.setList(orderItemRepository.findByCart(cart));
+	    cart.setList(itemService.getByCart(cart));
 
-	    // 🧮 Recalculate total
 	    double totalPrice = 0;
-	    for (OrderItem item : cart.getList()) {
+	    for (CartItem item : cart.getList()) {
 	        totalPrice += item.getPrice();
 	    }
 
@@ -74,15 +78,13 @@ public class CartServiceImpl implements CartService{
 	    return cart;
 	}
 
-
-	
 	@Override
 	public void removeFromCart(User user, Long bookId) {
 	    Cart cart = cartRepository.findByUser(user);
 
-	    OrderItem itemToRemove = null;
+	    CartItem itemToRemove = null;
 
-	    for (OrderItem item : cart.getList()) {
+	    for (CartItem item : cart.getList()) {
 	        if (item.getBook().getId().equals(bookId)) {
 	            itemToRemove = item;
 	            break;
@@ -90,10 +92,9 @@ public class CartServiceImpl implements CartService{
 	    }
 	    if (itemToRemove != null) {
 	        cart.getList().remove(itemToRemove);       
-	        orderItemRepository.delete(itemToRemove);   
+	        itemService.deleteCartItem(itemToRemove.getId());   
 	        cartRepository.save(cart);                  
 	    }
 	}
-
 
 }

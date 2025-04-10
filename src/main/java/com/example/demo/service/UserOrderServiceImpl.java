@@ -1,5 +1,6 @@
 package com.example.demo.service;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
@@ -11,9 +12,11 @@ import com.example.demo.model.User;
 import com.example.demo.model.UserOrder;
 import com.example.demo.repository.BookRepository;
 import com.example.demo.repository.CartRepository;
+import com.example.demo.repository.OrderItemRepository;
 import com.example.demo.repository.UserOrderRepository;
 import com.example.demo.repository.UserRepository;
 import com.example.demo.model.Cart;
+import com.example.demo.model.CartItem;
 import com.example.demo.model.OrderItem;
 import com.example.demo.templateMethod.LoyaltyPurchase;
 import com.example.demo.templateMethod.PromoPurchase;
@@ -30,10 +33,16 @@ public class UserOrderServiceImpl implements UserOrderService {
 	private UserOrderRepository orderRepository;
 	
 	@Autowired
+	private OrderItemRepository orderItemRepository;
+	
+	@Autowired
 	private BookRepository bookRepository;
 	
 	@Autowired
 	private CartRepository cartRepository;
+	
+	@Autowired
+	private CartItemService itemService; 
 
 	@Override
 	public List<UserOrder> getAllUserOrders() {
@@ -42,32 +51,49 @@ public class UserOrderServiceImpl implements UserOrderService {
 	}
 	
 	public void completeOrder(Long id, String promoCode, boolean usePoints) {
-		User user = userRepository.findById(id).orElse(null);
-		UserOrder order = new UserOrder();
-		Cart cart = cartRepository.findByUser(user);
-		order.setUser(user);
-		
-		Purchase purchase;
+	    User user = userRepository.findById(id).orElse(null);
+	    Cart cart = cartRepository.findByUser(user);
 
-        if (promoCode != null && !promoCode.isEmpty()) {
-            purchase = new PromoPurchase(orderRepository, userRepository, promoCode, cart, cartRepository);
-        } else if (usePoints && user.getLoyaltyPoints() >= 100) {
-            purchase = new LoyaltyPurchase(orderRepository, userRepository, cart, cartRepository);
-        } else {
-            purchase = new RegularPurchase(orderRepository, userRepository, cart, cartRepository);
-        }
-        
-        for (OrderItem item : cart.getList()) {
-            Book book = item.getBook();
-            int quantity = item.getQuantity();
-            book.setStock(book.getStock() - quantity);
-            bookRepository.save(book);
-        }
+	    UserOrder order = new UserOrder();
+	    order.setUser(user);
+	    order = orderRepository.save(order);
 
+	    Purchase purchase;
+	    if (promoCode != null && !promoCode.isEmpty()) {
+	        purchase = new PromoPurchase(orderRepository, userRepository, promoCode, cart, cartRepository, itemService);
+	    } else if (usePoints && user.getLoyaltyPoints() >= 100) {
+	        purchase = new LoyaltyPurchase(orderRepository, userRepository, cart, cartRepository, itemService);
+	    } else {
+	        purchase = new RegularPurchase(orderRepository, userRepository, cart, cartRepository, itemService);
+	    }
 
-        purchase.completeOrder(order);
-        cart.getList().clear();
-        cart.setTotalPrice(0);
-        cartRepository.save(cart);
+	    List<OrderItem> orderItems = new ArrayList<>();
+	    for (CartItem item : cart.getList()) {
+	        Book book = item.getBook();
+	        int quantity = item.getQuantity();
+
+	        book.setStock(book.getStock() - quantity);
+	        bookRepository.save(book);
+
+	        OrderItem orderItem = new OrderItem();
+	        orderItem.setBook(book);
+	        orderItem.setQuantity(quantity);
+	        orderItem.setPrice(item.getPrice());
+	        orderItem.setOrder(order);
+
+	        orderItem = orderItemRepository.save(orderItem);
+	        orderItems.add(orderItem);
+	    }
+
+	    order.setList(orderItems);
+	    orderRepository.save(order); 
+
+	    purchase.completeOrder(order);
 	}
+	
+	public List<UserOrder> getUserOrders(User user){
+		return orderRepository.findByUser(user);
+
+	}
+
 }

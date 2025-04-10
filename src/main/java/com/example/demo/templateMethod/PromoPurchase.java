@@ -6,6 +6,7 @@ import com.example.demo.model.UserOrder;
 import com.example.demo.repository.CartRepository;
 import com.example.demo.repository.UserOrderRepository;
 import com.example.demo.repository.UserRepository;
+import com.example.demo.service.CartItemService;
 
 public class PromoPurchase extends Purchase{
 	
@@ -14,10 +15,10 @@ public class PromoPurchase extends Purchase{
     private final String promoCode;
 
     public PromoPurchase(UserOrderRepository orderRepository, UserRepository userRepository, 
-    		String promoCode, Cart cart, CartRepository cartRepository) {
-        super(cart, cartRepository);
-    	this.orderRepository = orderRepository;
-        this.userRepository = userRepository;
+    		String promoCode, Cart cart, CartRepository cartRepository, CartItemService itemService) {
+    	super(cart, cartRepository, itemService);
+		this.orderRepository = orderRepository;
+		this.userRepository = userRepository;
         this.promoCode = promoCode;
     }
 

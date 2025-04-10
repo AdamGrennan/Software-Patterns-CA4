@@ -44,7 +44,9 @@ public class WebController {
 	}
     
 	@GetMapping("/administrator")
-	public String administrator() {
+	public String administrator(Model model) {
+		List<Book> books = bookService.getAllBooks(); 
+        model.addAttribute("books", books);
 		return "administrator";
 	}
 	

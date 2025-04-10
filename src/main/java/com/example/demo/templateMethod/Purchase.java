@@ -3,10 +3,13 @@ package com.example.demo.templateMethod;
 import com.example.demo.model.User;
 import com.example.demo.model.UserOrder;
 import com.example.demo.repository.CartRepository;
+import com.example.demo.repository.OrderItemRepository;
+import com.example.demo.service.CartItemService;
 
 import org.springframework.beans.factory.annotation.Autowired;
 
 import com.example.demo.model.Cart;
+import com.example.demo.model.CartItem;
 import com.example.demo.model.OrderItem;
 
 public abstract class Purchase {
@@ -15,10 +18,13 @@ public abstract class Purchase {
 	
     @Autowired
     private CartRepository cartRepository; 
+    
+	private CartItemService itemService;
 	
-    public Purchase(Cart cart, CartRepository cartRepository) {
+    public Purchase(Cart cart, CartRepository cartRepository, CartItemService itemService) {
         this.cart = cart;
         this.cartRepository = cartRepository;
+        this.itemService = itemService;
     }
 
     public final void completeOrder(UserOrder order) {
@@ -39,7 +45,7 @@ public abstract class Purchase {
 
     protected double calculateTotal() {
         double total = 0;
-        for(OrderItem item: cart.getList()) {
+        for(CartItem item: cart.getList()) {
         	total += item.getPrice();
         }
         return total;
@@ -68,5 +74,6 @@ public abstract class Purchase {
         cart.setTotalPrice(0);
         cartRepository.save(cart);
     }
+
 
 }

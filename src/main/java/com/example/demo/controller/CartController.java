@@ -35,11 +35,11 @@ public class CartController {
 	@PostMapping("/addToCart")
 	@ResponseBody
 	public String addToCart(@RequestParam Long bookId, HttpSession session) {
-		User user = (User) session.getAttribute("user");
-		cartService.addToCart(user.getId(), bookId);
-
-	    return "Book added successfully";
+	    User user = (User) session.getAttribute("user");
+	    cartService.addToCart(bookId, user.getId());
+	    return "Book added to cart!";
 	}
+
 	
 	@GetMapping("/viewCart")
 	public String viewCart(HttpSession session, Model model) {
@@ -66,6 +66,8 @@ public class CartController {
 	    orderService.completeOrder(user.getId(), promoCode, usePoints);
 	    return "redirect:/cart/viewCart";
 	}
+	
+	
 	
 	@PostMapping("/removeFromCart")
 	public String removeFromCart(@RequestParam Long bookId, HttpSession session) {

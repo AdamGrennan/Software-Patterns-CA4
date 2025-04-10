@@ -21,12 +21,6 @@ public class OrderItem {
 	@ManyToOne(fetch = FetchType.EAGER)
 	private Book book;
 
-	
-	@ManyToOne
-	@JoinColumn(name = "cart_id")
-	private Cart cart;
-
-
 	private int quantity;
 	private double price;
 	
@@ -59,11 +53,4 @@ public class OrderItem {
 		this.order = order;
 	}
 
-	public Cart getCart() {
-		return cart;
-	}
-
-	public void setCart(Cart cart) {
-		this.cart = cart;
-	}
 }

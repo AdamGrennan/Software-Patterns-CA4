@@ -11,6 +11,6 @@ public class AdministratorFactory extends Factory {
                            String address, String paymentMethod) {
         UserBuilder builder = new ConcreteUserBuilder(username, email, "Administrator", password, address, paymentMethod);
         UserDirector director = new UserDirector(builder);
-        return director.constructBook();
+        return director.constructUser();
     }
 }

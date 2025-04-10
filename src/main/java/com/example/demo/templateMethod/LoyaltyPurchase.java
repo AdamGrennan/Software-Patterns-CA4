@@ -6,6 +6,7 @@ import com.example.demo.model.UserOrder;
 import com.example.demo.repository.CartRepository;
 import com.example.demo.repository.UserOrderRepository;
 import com.example.demo.repository.UserRepository;
+import com.example.demo.service.CartItemService;
 
 public class LoyaltyPurchase extends Purchase {
 
@@ -13,10 +14,10 @@ public class LoyaltyPurchase extends Purchase {
     private final UserRepository userRepository;
 
     public LoyaltyPurchase(UserOrderRepository orderRepository, UserRepository userRepository, 
-    		Cart cart, CartRepository cartRepository) {
-        super(cart, cartRepository);
-    	this.orderRepository = orderRepository;
-        this.userRepository = userRepository;
+    		Cart cart, CartRepository cartRepository, CartItemService itemService) {
+    	super(cart, cartRepository, itemService);
+		this.orderRepository = orderRepository;
+		this.userRepository = userRepository;
     }
 
     @Override

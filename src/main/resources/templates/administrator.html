@@ -19,7 +19,6 @@
         <button type="submit">Search</button>
     </form>
 
-<!-- 
     <table border="1">
         <thead>
             <tr>
@@ -43,14 +42,21 @@
                 <td>
                     <form th:action="@{/admin/updateStock}" method="post">
                         <input type="hidden" name="bookId" th:value="${book.id}" />
-                        <input type="number" name="newStock" required />
+                        <input type="number" name="updateStock" required />
                         <button type="submit">Update</button>
+                    </form>
+                </td>
+				  <td>
+                    <form th:action="@{/admin/deleteStock}" method="post">
+                        <input type="hidden" name="bookId" th:value="${book.id}" />
+                        <input type="number" name="deleteStock" required />
+                        <button type="submit">Delete</button>
                     </form>
                 </td>
             </tr>
         </tbody>
     </table>
--->
+
     <h2>Customer Details & Purchase History</h2>
     <form th:action="@{/admin/searchCustomer}" method="get">
         <label for="email">Customer Email:</label>
@@ -82,6 +88,13 @@
 		 <form th:action="@{/book_form}" method="get">
         <button type="submit">Add Book</button>
     </form>
-	
+	 <br />
+		 <form th:action="@{/customer_details}" method="get">
+        <button type="submit">Customer Details</button>
+    </form>
+	 <br />
+		 <form th:action="@{/}" method="get">
+        <button type="submit">Logout</button>
+    </form>
 </body>
 </html>

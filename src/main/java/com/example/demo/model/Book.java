@@ -1,7 +1,5 @@
 package com.example.demo.model;
 
-import java.util.Objects;
-
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
@@ -22,6 +20,7 @@ public class Book {
 	private String isbn;
 	private String image;
 	private int stock;
+	private double averageRating;
 	
 	public Book() {
 		
@@ -85,18 +84,13 @@ public class Book {
 	public void setStock(int stock) {
 		this.stock = stock;
 	}
+
+	public double getAverageRating() {
+		return averageRating;
+	}
+
+	public void setAverageRating(double averageRating) {
+		this.averageRating = averageRating;
+	}
 	
-	@Override
-	public boolean equals(Object o) {
-	    if (this == o) return true;
-	    if (!(o instanceof Book)) return false;
-	    Book book = (Book) o;
-	    return id != null && id.equals(book.getId());
-	}
-
-	@Override
-	public int hashCode() {
-	    return Objects.hash(id);
-	}
-
 }

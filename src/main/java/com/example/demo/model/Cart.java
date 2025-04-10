@@ -22,20 +22,20 @@ public class Cart {
 	@OneToOne
 	User user;
 	
-	@OneToMany(mappedBy = "cart", cascade = CascadeType.ALL, fetch = FetchType.EAGER)
-	private List<OrderItem> list = new ArrayList<>();
-	
+	@OneToMany(mappedBy = "cart", cascade = CascadeType.ALL, orphanRemoval = true, fetch = FetchType.EAGER)
+	private List<CartItem> list = new ArrayList<>();
+
 	private double totalPrice;
 	
 	public Cart() {
 		
 	}
 
-	public List<OrderItem> getList() {
+	public List<CartItem> getList() {
 		return list;
 	}
 
-	public void setList(List<OrderItem> list) {
+	public void setList(List<CartItem> list) {
 		this.list = list;
 	}
 	
