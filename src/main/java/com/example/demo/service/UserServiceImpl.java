@@ -3,8 +3,14 @@ package com.example.demo.service;
 import com.example.demo.factory.AdministratorFactory;
 import com.example.demo.factory.CustomerFactory;
 import com.example.demo.factory.Factory;
+import com.example.demo.model.Role;
 import com.example.demo.model.User;
 import com.example.demo.repository.UserRepository;
+import com.example.demo.proxy.IUserAccess;
+import com.example.demo.proxy.UserAccessProxy;
+
+import jakarta.servlet.http.HttpSession;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import java.util.List;
@@ -33,7 +39,7 @@ public class UserServiceImpl implements UserService {
 			return null;
 		}else {
 			 Factory factory;
-			    if (user.getRole().equalsIgnoreCase("Administrator")) {
+			    if (user.getRole() == Role.ADMINISTRATOR) {
 			        factory = new AdministratorFactory();
 			    } else {
 			        factory = new CustomerFactory(); 
@@ -46,14 +52,16 @@ public class UserServiceImpl implements UserService {
 	}
 	
 	@Override
-	public User login(String email, String password) {
-		User user = userRepository.findByEmailAndPassword(email, password);
-		if(user != null) {
-			return user;
-		}else {
-			return null;
-		}
-		
+	public String login(String email, String password, HttpSession session) {
+	    User user = userRepository.findByEmailAndPassword(email, password);
+
+	    if (user != null) {
+	        session.setAttribute("user", user);
+	        IUserAccess proxy = new UserAccessProxy(user);
+	        return proxy.accessDashboard();
+	    } else {
+	        return "login";
+	    }
 	}
 
 	@Override

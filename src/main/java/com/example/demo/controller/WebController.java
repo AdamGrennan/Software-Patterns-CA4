@@ -6,6 +6,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 
 import com.example.demo.model.Book;
 import com.example.demo.model.User;
@@ -43,6 +44,15 @@ public class WebController {
 		return "register";
 	}
     
+    @GetMapping("/review")
+    public String review(@RequestParam Long bookId, Model model) {
+        Book book = bookService.getBookById(bookId);
+        model.addAttribute("book", book);
+        return "review";
+    }
+
+       
+    
 	@GetMapping("/administrator")
 	public String administrator(Model model) {
 		List<Book> books = bookService.getAllBooks(); 
@@ -59,6 +69,11 @@ public class WebController {
 	public String bookForm() {
 		return "book_form";
 	}
-
+	
+	@GetMapping("/logout")
+	public String logout(HttpSession session) {
+	    session.invalidate(); 
+	    return "redirect:/";
+	}
 
 }

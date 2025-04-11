@@ -5,6 +5,9 @@
 </head>
 <body>
     <h1>Administrator Dashboard</h1>
+	    <p>
+        Welcome Admin, <span th:text="${session.user.username}">User</span><br />
+    </p>
 
     <h2>View & Search Stock</h2>
     <form th:action="@{/admin/searchStock}" method="get">
@@ -24,9 +27,11 @@
             <tr>
                 <th>Title</th>
                 <th>Author</th>
+                <th>Price</th>
                 <th>Category</th>
                 <th>Publisher</th>
-                <th>Price</th>
+                <th>ISBN</th>
+                <th>Image</th>
                 <th>Stock</th>
                 <th>Update Stock</th>
             </tr>
@@ -35,9 +40,13 @@
             <tr th:each="book : ${books}">
                 <td th:text="${book.title}"></td>
                 <td th:text="${book.author}"></td>
+                <td th:text="${book.price}"></td>
                 <td th:text="${book.category}"></td>
                 <td th:text="${book.publisher}"></td>
-                <td th:text="${book.price}"></td>
+                <td th:text="${book.isbn}"></td>
+				 <td>
+                    <img th:src="${book.image}" alt="Book Image" width="120" height="160"/>
+                </td>
                 <td th:text="${book.stock}"></td>
                 <td>
                     <form th:action="@{/admin/updateStock}" method="post">
@@ -47,11 +56,7 @@
                     </form>
                 </td>
 				  <td>
-                    <form th:action="@{/admin/deleteStock}" method="post">
-                        <input type="hidden" name="bookId" th:value="${book.id}" />
-                        <input type="number" name="deleteStock" required />
-                        <button type="submit">Delete</button>
-                    </form>
+                    <button type="button" th:onclick="'deleteBook(' + ${book.id} + ')'">Delete</button>
                 </td>
             </tr>
         </tbody>
@@ -92,9 +97,39 @@
 		 <form th:action="@{/customer_details}" method="get">
         <button type="submit">Customer Details</button>
     </form>
-	 <br />
-		 <form th:action="@{/}" method="get">
+	<br />
+		 <form th:action="@{/logout}" method="get">
         <button type="submit">Logout</button>
     </form>
+	   <script type="text/javascript">
+        function sortBooks() {
+            var sortBy = document.getElementById("sortBy").value;
+            var order = document.getElementById("order").value;
+            var xmlhttp = new XMLHttpRequest();
+
+            xmlhttp.onreadystatechange = function() {
+                if (xmlhttp.readyState === 4 && xmlhttp.status === 200) {
+                    document.getElementById("bookTableBody").innerHTML = xmlhttp.responseText;
+                }
+            };
+
+            xmlhttp.open("GET", "/api/sort?sortBy=" + sortBy + "&order=" + order, true);
+            xmlhttp.send();
+        }
+		
+		function deleteBook(bookId) {
+            var xmlhttp = new XMLHttpRequest();
+
+            xmlhttp.onreadystatechange = function() {
+                if (xmlhttp.readyState === 4 && xmlhttp.status === 200) {
+                    alert("Book has been deleted!");
+                }
+            };
+
+              xmlhttp.open("POST", "/cart/addToCart", true);
+			  xmlhttp.setRequestHeader("Content-type","application/x-www-form-urlencoded");
+			  xmlhttp.send("bookId=" + bookId);
+        }
+    </script>
 </body>
 </html>

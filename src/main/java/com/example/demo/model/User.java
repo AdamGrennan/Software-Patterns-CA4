@@ -2,6 +2,8 @@ package com.example.demo.model;
 
 import jakarta.persistence.DiscriminatorColumn;
 import jakarta.persistence.Entity;
+import jakarta.persistence.EnumType;
+import jakarta.persistence.Enumerated;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
@@ -19,11 +21,13 @@ public class User {
 	
 	private String username;
 	private String email;
-	private String role;
 	private String password;
 	private String address;
 	private String paymentMethod;
 	private int loyaltyPoints;
+	
+	@Enumerated(EnumType.STRING)
+	private Role role;
 	
 	public User() {
 		
@@ -69,11 +73,11 @@ public class User {
 		this.email = email;
 	}
 
-	public String getRole() {
+	public Role getRole() {
 		return role;
 	}
 
-	public void setRole(String role) {
+	public void setRole(Role role) {
 		this.role = role;
 	}
 

@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <title>Book Details</title>
+    <meta charset="UTF-8">
+</head>
+<body>
+
+    <h1 th:text="${book.title}">Book Title</h1>
+    <p><strong>Author:</strong> <span th:text="${book.author}">Author</span></p>
+    <p><strong>Publisher:</strong> <span th:text="${book.publisher}">Publisher</span></p>
+    <p><strong>Category:</strong> <span th:text="${book.category}">Category</span></p>
+    <p><strong>Average Rating:</strong> <span th:text="${book.averageRating}">0.0</span> / 5</p>
+    <p><strong>Number of Reviews:</strong> <span th:text="${book.numberReviews}">0</span></p>
+
+    <hr>
+
+    <h2>Reviews</h2>
+    <div th:if="${#lists.isEmpty(reviews)}">
+        <p>No reviews yet.</p>
+    </div>
+    <div>
+        <ul>
+            <li th:each="review : ${reviews}">
+                <p>
+                    <strong>Rating:</strong> <span th:text="${review.rating}">5</span><br>
+                    <strong>Comment:</strong> <span th:text="${review.comment}">Great book!</span><br>
+                    <strong>By:</strong> <span th:text="${review.user.username}">User</span>
+                </p>
+                <hr>
+            </li>
+        </ul>
+    </div>
+		<br />
+	<form th:action="@{/home}" method="get">
+    <button type="submit">Home</button>
+</form>
+
+</body>
+</html>

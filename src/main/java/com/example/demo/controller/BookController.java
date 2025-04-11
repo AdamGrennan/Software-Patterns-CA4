@@ -3,8 +3,6 @@ package com.example.demo.controller;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -23,9 +21,9 @@ public class BookController {
 	private BookService bookService;
 	
 	@PostMapping("/addBook")
-	public ResponseEntity<Book> addBook(Book book) {
-		Book savedBook = bookService.addBook(book);
-		return new ResponseEntity<>(savedBook, HttpStatus.CREATED);
+	public String addBook(Book book) {
+		bookService.addBook(book);
+		return "administrator";
 	}
 	
 	@GetMapping("/search")

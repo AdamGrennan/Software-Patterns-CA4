@@ -21,6 +21,7 @@ public class Book {
 	private String image;
 	private int stock;
 	private double averageRating;
+	private int numberReviews;
 	
 	public Book() {
 		
@@ -91,6 +92,14 @@ public class Book {
 
 	public void setAverageRating(double averageRating) {
 		this.averageRating = averageRating;
+	}
+
+	public int getNumberReviews() {
+		return numberReviews;
+	}
+
+	public void setNumberReviews(int numberReviews) {
+		this.numberReviews = numberReviews;
 	}
 	
 }

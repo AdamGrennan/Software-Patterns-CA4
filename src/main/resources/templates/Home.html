@@ -4,12 +4,13 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Bookstore</title>
+	<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
 </head>
 <body>
     <h1>Bookstore</h1>
 
-    <p th:if="${user != null}">
-        Welcome, <span th:text="${user.username}">User</span><br />
+    <p>
+        Welcome, <span th:text="${session.user.username}">User</span><br />
         Loyalty Points: <span th:text="${loyaltyPoints}">0</span>
     </p>
 
@@ -93,15 +94,19 @@
 
                 </td>
 				 <td>
-                       <form th:action="@{/}" method="get">
+						<label class="fa fa-star"></label>
+						<span th:text="${book.averageRating}">Average Rating</span>
+                       <form th:action="@{/review/viewReviews}" method="get">
+							<input type="hidden" name="bookId" th:value="${book.id}" />
 						<button type="submit">Reviews</button>
+						</form>
                 </td>
             </tr>
         </tbody>
     </table>
 	
 	<br />
-		 <form th:action="@{/}" method="get">
+		 <form th:action="@{/logout}" method="get">
         <button type="submit">Logout</button>
     </form>
 

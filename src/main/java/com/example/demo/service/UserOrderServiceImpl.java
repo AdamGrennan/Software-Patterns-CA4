@@ -50,9 +50,14 @@ public class UserOrderServiceImpl implements UserOrderService {
 		
 	}
 	
-	public void completeOrder(Long id, String promoCode, boolean usePoints) {
+	public String completeOrder(Long id, String promoCode, boolean usePoints) {
 	    User user = userRepository.findById(id).orElse(null);
 	    Cart cart = cartRepository.findByUser(user);
+	    
+	    if (cart == null || cart.getList().isEmpty()) {
+	    	return "redirect:/cart/viewCart?error=empty";
+
+	    }
 
 	    UserOrder order = new UserOrder();
 	    order.setUser(user);
@@ -89,6 +94,7 @@ public class UserOrderServiceImpl implements UserOrderService {
 	    orderRepository.save(order); 
 
 	    purchase.completeOrder(order);
+	    return "redirect:/cart";
 	}
 	
 	public List<UserOrder> getUserOrders(User user){

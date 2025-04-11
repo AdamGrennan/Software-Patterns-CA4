@@ -4,7 +4,24 @@
     <title>Item Review</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
     <style>
-        .checked {
+        .star-rating {
+            direction: rtl;
+            display: inline-flex;
+        }
+
+        .star-rating input[type="radio"] {
+            display: none;
+        }
+
+        .star-rating label {
+            font-size: 2em;
+            color: #ccc;
+            cursor: pointer;
+        }
+
+        .star-rating input[type="radio"]:checked ~ label,
+        .star-rating label:hover,
+        .star-rating label:hover ~ label {
             color: orange;
         }
     </style>
@@ -12,18 +29,31 @@
 <body>
 <h2>Item Review</h2>
 
-<p>Welcome, <span th:text="${user.username}">User</span></p>
+<form th:action="@{/review/addReview}" method="post">
+    <input type="hidden" name="bookId" th:value="${book.id}" />
 
-<form th:action="@{/users/review}" method="post">
-    <span class="fa fa-star checked"></span>
-    <span class="fa fa-star checked"></span>
-    <span class="fa fa-star checked"></span>
-    <span class="fa fa-star"></span>
-    <span class="fa fa-star"></span>
+    <div class="star-rating">
+        <input type="radio" id="star5" name="rating" value="5" required />
+        <label for="star5" class="fa fa-star"></label>
 
-    <br />
-    <textarea id="comment" name="comment" required></textarea>
-    <br />
+        <input type="radio" id="star4" name="rating" value="4" />
+        <label for="star4" class="fa fa-star"></label>
+
+        <input type="radio" id="star3" name="rating" value="3" />
+        <label for="star3" class="fa fa-star"></label>
+
+        <input type="radio" id="star2" name="rating" value="2" />
+        <label for="star2" class="fa fa-star"></label>
+
+        <input type="radio" id="star1" name="rating" value="1" />
+        <label for="star1" class="fa fa-star"></label>
+    </div>
+
+    <br><br>
+    <label for="comment">Leave a comment:</label><br>
+    <textarea id="comment" name="comment" rows="4" cols="50" required></textarea>
+
+    <br><br>
     <button type="submit">Submit</button>
 </form>
 

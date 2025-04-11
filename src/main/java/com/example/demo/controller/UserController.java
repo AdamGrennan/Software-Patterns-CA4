@@ -8,8 +8,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 
 import com.example.demo.model.User;
 import com.example.demo.service.UserService;
-import com.example.demo.proxy.IUserAccess;
-import com.example.demo.proxy.UserAccessProxy;
+
 
 import jakarta.servlet.http.HttpSession;
 
@@ -33,16 +32,13 @@ public class UserController {
 	
 	@PostMapping("/login")
 	public String login(User user, HttpSession session, Model model) {
-	    User loginUser = userService.login(user.getEmail(), user.getPassword());
-	    if (loginUser != null) {
-	        session.setAttribute("user", loginUser);
-	        IUserAccess proxy = new UserAccessProxy(loginUser);
-	        return proxy.accessDashboard();
-	    } else {
+	    String login = userService.login(user.getEmail(), user.getPassword(), session);
+	    if (login.equals("login")) {
 	        model.addAttribute("error", "User not found.");
-	        return "login";
 	    }
+	    return login;
 	}
+
 
 
 }

@@ -3,21 +3,16 @@ package com.example.demo.controller;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
-import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 
-import com.example.demo.model.Book;
 import com.example.demo.model.User;
-import com.example.demo.service.BookService;
 import com.example.demo.service.CartService;
 import com.example.demo.service.UserOrderService;
-import com.example.demo.service.UserService;
 import com.example.demo.model.Cart;
-import com.example.demo.model.OrderItem;
 
 import jakarta.servlet.http.HttpSession;
 
@@ -42,12 +37,16 @@ public class CartController {
 
 	
 	@GetMapping("/viewCart")
-	public String viewCart(HttpSession session, Model model) {
+	public String viewCart(HttpSession session, Model model, @RequestParam(required = false) String error) {
 		User user = (User) session.getAttribute("user");
 		Cart cart = cartService.getCart(user);
 		model.addAttribute("cart", cart);
 	    model.addAttribute("books", cart.getList());
 	    model.addAttribute("totalPrice", cart.getTotalPrice());
+	    
+	    if (error != null) {
+	        model.addAttribute("error", error);
+	    }
 	   
 	    if (user != null) {
 	        model.addAttribute("user", user);
@@ -63,8 +62,7 @@ public class CartController {
 	        HttpSession session) {
 		
 	    User user = (User) session.getAttribute("user");
-	    orderService.completeOrder(user.getId(), promoCode, usePoints);
-	    return "redirect:/cart/viewCart";
+	    return orderService.completeOrder(user.getId(), promoCode, usePoints);
 	}
 	
 	

@@ -6,6 +6,10 @@
 <body>
 <h2>Your Cart</h2>
 
+<div th:if="${error} == 'empty'" class="alert alert-danger" role="alert">
+    Your cart is empty. Please add items before completing your order.
+</div>
+
 <p>Welcome, <span th:text="${user.username}">User</span></p>
 
 <table border="1">
