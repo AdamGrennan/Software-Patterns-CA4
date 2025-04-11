@@ -2,6 +2,8 @@ package com.example.demo.templateMethod;
 
 import com.example.demo.model.User;
 import com.example.demo.model.UserOrder;
+import com.example.demo.observer.LoyaltyPointsObserver;
+import com.example.demo.observer.PurchaseSubject;
 import com.example.demo.repository.CartRepository;
 import com.example.demo.repository.OrderItemRepository;
 import com.example.demo.service.CartItemService;
@@ -59,10 +61,9 @@ public abstract class Purchase {
     protected abstract void saveOrder(UserOrder order);
     
     protected void addLoyaltyPoints(User user, double totalPaid) {
-        int points = (int) totalPaid;
-        int current = user.getLoyaltyPoints();
-        user.setLoyaltyPoints(current + points);
-        System.out.println("Added " + points + " loyalty points to your card.");
+        PurchaseSubject subject = new PurchaseSubject();
+        subject.attach(new LoyaltyPointsObserver());
+        subject.setPurchase(user, totalPaid);
     }
 
     protected void confirm() {

@@ -29,29 +29,13 @@ public class WebController {
         model.addAttribute("loyaltyPoints", user.getLoyaltyPoints());
         return "home";
     }
-    
-    /**
-    @GetMapping("/administrator")
-	public String administrator(Model model) {
-    	List<UserOrder> purchases = userOrderService.getAllUserOrders();
-    	model.addAttribute("purchases", purchases);
-		return "administrator";
-	}
-	**/
+   
     
     @GetMapping("/register")
 	public String register() {
 		return "register";
 	}
-    
-    @GetMapping("/review")
-    public String review(@RequestParam Long bookId, Model model) {
-        Book book = bookService.getBookById(bookId);
-        model.addAttribute("book", book);
-        return "review";
-    }
 
-       
     
 	@GetMapping("/administrator")
 	public String administrator(Model model) {
@@ -70,10 +54,4 @@ public class WebController {
 		return "book_form";
 	}
 	
-	@GetMapping("/logout")
-	public String logout(HttpSession session) {
-	    session.invalidate(); 
-	    return "redirect:/";
-	}
-
 }

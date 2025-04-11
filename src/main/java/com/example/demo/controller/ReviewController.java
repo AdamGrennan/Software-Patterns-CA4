@@ -27,6 +27,13 @@ public class ReviewController {
 	
 	@Autowired
 	private BookService bookService;
+	
+    @GetMapping("/review")
+    public String review(@RequestParam Long bookId, Model model) {
+        Book book = bookService.getBookById(bookId);
+        model.addAttribute("book", book);
+        return "review";
+    }
 
 	@PostMapping("/addReview")
 	public String addReview(

@@ -28,10 +28,9 @@
       <img th:src="${item.book.image}" alt="Book Image" width="120" height="160"/>
      </td>
 	 <td>
-     <form th:action="@{/cart/removeFromCart}" method="post">
-      <input type="hidden" name="bookId" th:value="${item.book.id}" />
-        <button type="submit">Remove</button>
-         </form>
+		 <button type="button" th:onclick="'removeCart(' + ${item.book.id} + ', this)'">Remove</button>
+
+
      </td>
   </tr>
 </table>
@@ -57,6 +56,24 @@
 <form th:action="@{/home}" method="get">
     <button type="submit">Home</button>
 </form>
+   <script type="text/javascript">
+function removeCart(bookId, btn) {
+    var xmlhttp = new XMLHttpRequest();
+
+    xmlhttp.onreadystatechange = function() {
+        if (xmlhttp.readyState === 4 && xmlhttp.status === 200) {
+            alert("Item removed from cart!");
+            var row = btn.closest("tr");
+            row.remove(); 
+        }
+    };
+
+    xmlhttp.open("POST", "/cart/removeFromCart", true);
+    xmlhttp.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
+    xmlhttp.send("bookId=" + bookId);
+}
+
+    </script>
 
 </body>
 </html>

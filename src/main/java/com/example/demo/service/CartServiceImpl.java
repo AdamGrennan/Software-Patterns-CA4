@@ -32,6 +32,10 @@ public class CartServiceImpl implements CartService{
 	public Cart addToCart(Long bookId, Long userId) {
 	    Book book = bookService.getBookById(bookId);
 	    User user = userService.getUserById(userId);
+	    
+	    if(book.getStock() == 0) {
+	    	
+	    }
 
 	    Cart cart = cartRepository.findByUser(user);
 	    if (cart == null) {

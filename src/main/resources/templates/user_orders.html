@@ -42,7 +42,7 @@
                 </td>
                 <td th:text="${item.quantity}">Quantity</td>
                 <td>
-                    <form th:action="@{/review}" method="get">
+                    <form th:action="@{/review/review}" method="get">
                         <input type="hidden" name="bookId" th:value="${item.book.id}" />
                         <button type="submit">Review</button>
                     </form>

@@ -68,11 +68,13 @@ public class CartController {
 	
 	
 	@PostMapping("/removeFromCart")
+	@ResponseBody
 	public String removeFromCart(@RequestParam Long bookId, HttpSession session) {
 	    User user = (User) session.getAttribute("user");
 	    cartService.removeFromCart(user, bookId);
-	    return "redirect:/cart/viewCart";
+	    return "Item removed";
 	}
+
 
 
 }
