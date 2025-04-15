@@ -37,7 +37,9 @@ public class CartController {
 
 	
 	@GetMapping("/viewCart")
-	public String viewCart(HttpSession session, Model model, @RequestParam(required = false) String error) {
+	public String viewCart(HttpSession session, Model model, 
+			@RequestParam(required = false) String error,
+			@RequestParam(required = false) String success) {
 		User user = (User) session.getAttribute("user");
 		Cart cart = cartService.getCart(user);
 		model.addAttribute("cart", cart);
@@ -47,6 +49,11 @@ public class CartController {
 	    if (error != null) {
 	        model.addAttribute("error", error);
 	    }
+	    
+	    if (success != null) {
+	        model.addAttribute("success", success);
+	    }
+
 	   
 	    if (user != null) {
 	        model.addAttribute("user", user);
@@ -62,10 +69,8 @@ public class CartController {
 	        HttpSession session) {
 		
 	    User user = (User) session.getAttribute("user");
-	    return orderService.completeOrder(user.getId(), promoCode, usePoints);
+	    return orderService.completeOrder(user.getId(), promoCode, usePoints, session);
 	}
-	
-	
 	
 	@PostMapping("/removeFromCart")
 	@ResponseBody

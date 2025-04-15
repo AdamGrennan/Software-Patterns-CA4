@@ -11,7 +11,7 @@
 
     <p>
         Welcome, <span th:text="${session.user.username}">User</span><br />
-        Loyalty Points: <span th:text="${loyaltyPoints}">0</span>
+        Loyalty Points: <span th:text="${session.user.loyaltyPoints}">0</span>
     </p>
 
 <div style="position: absolute; top: 10px; right: 10px; display: flex; gap: 10px;">
@@ -27,8 +27,6 @@
         </button>
     </form>
 </div>
-
-
     <br />
 
     <form th:action="@{/books/search}" method="get">

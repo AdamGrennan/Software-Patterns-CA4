@@ -23,6 +23,8 @@ import com.example.demo.templateMethod.PromoPurchase;
 import com.example.demo.templateMethod.Purchase;
 import com.example.demo.templateMethod.RegularPurchase;
 
+import jakarta.servlet.http.HttpSession;
+
 @Service
 public class UserOrderServiceImpl implements UserOrderService {
 	
@@ -50,13 +52,12 @@ public class UserOrderServiceImpl implements UserOrderService {
 		
 	}
 	
-	public String completeOrder(Long id, String promoCode, boolean usePoints) {
+	public String completeOrder(Long id, String promoCode, boolean usePoints, HttpSession session) {
 	    User user = userRepository.findById(id).orElse(null);
 	    Cart cart = cartRepository.findByUser(user);
 	    
 	    if (cart == null || cart.getList().isEmpty()) {
 	    	return "redirect:/cart/viewCart?error=empty";
-
 	    }
 
 	    UserOrder order = new UserOrder();
@@ -94,7 +95,8 @@ public class UserOrderServiceImpl implements UserOrderService {
 	    orderRepository.save(order); 
 
 	    purchase.completeOrder(order);
-	    return "redirect:/cart";
+	    session.setAttribute("user", user);
+	    return "redirect:/cart/viewCart?success=complete";
 	}
 	
 	public List<UserOrder> getUserOrders(User user){

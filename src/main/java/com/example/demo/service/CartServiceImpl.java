@@ -2,16 +2,12 @@ package com.example.demo.service;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-import org.springframework.web.bind.annotation.RequestParam;
 
 import com.example.demo.model.Book;
 import com.example.demo.model.Cart;
 import com.example.demo.model.CartItem;
-import com.example.demo.model.OrderItem;
 import com.example.demo.model.User;
-import com.example.demo.repository.CartItemRepository;
 import com.example.demo.repository.CartRepository;
-import com.example.demo.repository.OrderItemRepository;
 
 @Service
 public class CartServiceImpl implements CartService{

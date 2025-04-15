@@ -1,0 +1,31 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" th:inline="javascript">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Orders</title>
+</head>
+<body>
+    <h2>Customer Details & Purchase History</h2>
+ <table border="1">
+        <thead>
+            <tr>
+                <th>Username</th>
+                <th>Email</th>
+                <th>Address</th>
+                <th>Payment Method</th>
+                <th>Loyalty Points</th>
+            </tr>
+        </thead>
+        <tbody id="userTableBody">
+            <tr th:each="user : ${users}">
+                <td th:text="${user.username}"></td>
+                <td th:text="${user.email}"></td>
+                <td th:text="${user.address}"></td>
+                <td th:text="${user.paymentMethod}"></td>
+                <td th:text="${user.loyaltyPoints}"></td>
+            </tr>
+        </tbody>
+    </table>
+</body>
+</html>

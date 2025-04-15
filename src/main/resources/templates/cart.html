@@ -10,6 +10,11 @@
     Your cart is empty. Please add items before completing your order.
 </div>
 
+<div th:if="${success != null and success.equals('complete')}" class="alert alert-success" role="alert">
+    Purchase complete.
+</div>
+
+
 <p>Welcome, <span th:text="${user.username}">User</span></p>
 
 <table border="1">
@@ -43,7 +48,7 @@
 
     <br/><br/>
 
-    <input type="checkbox" id="loyaltyPoints" name="loyaltyPoints" value="true" />
+    <input type="checkbox" id="loyaltyPoints" name="usePoints" value="true" />
     <label for="usePoints">Use Loyalty Points</label>
 
     <br/><br/>
