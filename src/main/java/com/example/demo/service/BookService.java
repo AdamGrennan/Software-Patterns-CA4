@@ -26,5 +26,7 @@ public interface BookService {
 	List<Book> sortBooks(String sortBy, boolean ascending);
 	
 	List<Book> searchBooks(String searchBy, String query);
+	
+	void increaseStock(Long bookId, int quantity);
 
 }

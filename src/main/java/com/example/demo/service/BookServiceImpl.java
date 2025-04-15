@@ -123,6 +123,10 @@ public class BookServiceImpl implements BookService{
 	            return new ArrayList<>();
 	    }
 	}
-
-
+	
+	public void increaseStock(Long bookId, int quantity) {
+	    Book book = bookRepository.findById(bookId).orElse(null);
+	    book.setStock(book.getStock() + quantity);
+	    bookRepository.save(book);
+	}
 }

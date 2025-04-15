@@ -53,6 +53,7 @@
                 <th>Image</th>
                 <th>Stock</th>
                 <th>Update</th>
+                <th>Simulate Stock</th>
             </tr>
         </thead>
         <tbody>
@@ -73,6 +74,13 @@
 					<button type="submit">Update</button>
 					</form>
                 </td>
+				<td>
+				<form th:action="@{/admin/simulateStock}" method="post">
+				<input type="hidden" name="bookId" th:value="${book.id}" />
+				<input type="number" name="quantity" required />
+				<button type="submit">Simulate</button>
+				</form>
+				</td>
 				  <td>
                     <button type="button" th:onclick="'deleteBook(' + ${book.id} + ')'">Delete</button>
                 </td>

@@ -58,4 +58,11 @@ public class AdminController {
         model.addAttribute("users", users);
         return "customer_details";
     }
+    
+    @PostMapping("/simulateStock")
+    public String simulateStock(@RequestParam Long bookId, @RequestParam int quantity) {
+        adminService.simulateStock(bookId, quantity);
+        return "redirect:/administrator";
+    }
+
 }
