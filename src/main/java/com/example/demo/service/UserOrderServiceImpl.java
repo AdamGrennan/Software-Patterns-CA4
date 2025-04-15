@@ -52,8 +52,8 @@ public class UserOrderServiceImpl implements UserOrderService {
 		
 	}
 	
-	public String completeOrder(Long id, String promoCode, boolean usePoints, HttpSession session) {
-	    User user = userRepository.findById(id).orElse(null);
+	public String completeOrder(String promoCode, boolean usePoints, HttpSession session) {
+	    User user = (User) session.getAttribute("user");
 	    Cart cart = cartRepository.findByUser(user);
 	    
 	    if (cart == null || cart.getList().isEmpty()) {

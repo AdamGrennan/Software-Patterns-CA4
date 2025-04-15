@@ -5,14 +5,13 @@ import com.example.demo.model.UserOrder;
 import com.example.demo.observer.LoyaltyPointsObserver;
 import com.example.demo.observer.PurchaseSubject;
 import com.example.demo.repository.CartRepository;
-import com.example.demo.repository.OrderItemRepository;
 import com.example.demo.service.CartItemService;
+import com.example.demo.service.CartService;
 
 import org.springframework.beans.factory.annotation.Autowired;
 
 import com.example.demo.model.Cart;
 import com.example.demo.model.CartItem;
-import com.example.demo.model.OrderItem;
 
 public abstract class Purchase {
 	
@@ -20,6 +19,9 @@ public abstract class Purchase {
 	
     @Autowired
     private CartRepository cartRepository; 
+    
+    @Autowired
+    private CartService cartService;
     
 	private CartItemService itemService;
 	
@@ -47,11 +49,12 @@ public abstract class Purchase {
 
     protected double calculateTotal() {
         double total = 0;
-        for(CartItem item: cart.getList()) {
-        	total += item.getPrice();
+        for (CartItem item : cart.getList()) {
+            total += item.getPrice() * item.getQuantity();
         }
         return total;
     }
+
 
     protected double applyDiscount(User user, double total) {
         return total;  
@@ -71,9 +74,7 @@ public abstract class Purchase {
     }
 
     protected void clearCart() {
-        cart.getList().clear();
-        cart.setTotalPrice(0);
-        cartRepository.save(cart);
+    	cartService.clearCart(cart);
     }
 
 

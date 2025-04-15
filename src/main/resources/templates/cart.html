@@ -15,7 +15,11 @@
 </div>
 
 
-<p>Welcome, <span th:text="${user.username}">User</span></p>
+    <p>
+        Welcome, <span th:text="${session.user.username}">User</span><br />
+        Loyalty Points: <span th:text="${session.user.loyaltyPoints}">0</span>
+    </p>
+
 
 <table border="1">
 <thead>
@@ -42,12 +46,14 @@
 
 <p>Total: <span th:text="${cart.totalPrice}"></span></p>
 
-<form th:action="@{/cart/completeOrder}" method="post">
+<form th:action="@{/cart/applyPromo}" method="post">
     <label for="promoCode">Promo Code:</label>
-    <input type="text" id="promoCode" name="promoCode" placeholder="Enter promo code" />
+    <input type="text" id="promoCode" name="promoCode" placeholder="Enter promo code" required />
+    <button type="submit">Apply</button>
+</form>
 
-    <br/><br/>
 
+<form th:action="@{/cart/completeOrder}" method="post">
     <input type="checkbox" id="loyaltyPoints" name="usePoints" value="true" />
     <label for="usePoints">Use Loyalty Points</label>
 

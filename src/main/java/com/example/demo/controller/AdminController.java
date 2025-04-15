@@ -43,18 +43,9 @@ public class AdminController {
 	    return "update_book";
 	}
 
-
-	@PostMapping("/updateStock")
-	@ResponseBody
-	public String updateBook(@RequestParam Long id, @ModelAttribute Book book) {
-		adminService.updateBook(id, book);
-		return "administrator";
-	}
-	
-
     @GetMapping("/viewCustomers")
     public String viewCustomers(Model model) {
-        List<User> users = userService.getAllUsers(); 
+        List<User> users = userService.getAllCustomers(); 
         model.addAttribute("users", users);
         return "customer_details";
     }
@@ -64,5 +55,12 @@ public class AdminController {
         adminService.simulateStock(bookId, quantity);
         return "redirect:/administrator";
     }
+    
+	@GetMapping("/administrator")
+	public String administrator(Model model) {
+		List<Book> books = bookService.getAllBooks(); 
+        model.addAttribute("books", books);
+		return "administrator";
+	}
 
 }

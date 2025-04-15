@@ -9,6 +9,6 @@ import jakarta.servlet.http.HttpSession;
 
 public interface UserOrderService {
 	List<UserOrder> getAllUserOrders();
-	String completeOrder(Long id, String promoCode, boolean usePoints, HttpSession session);
+	String completeOrder(String promoCode, boolean usePoints, HttpSession session);
 	List<UserOrder> getUserOrders(User user);
 }

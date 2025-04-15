@@ -14,6 +14,10 @@ public class ReviewSubject {
     public void attach(ReviewObserver o) {
         observers.add(o);
     }
+    
+    public void detach(ReviewObserver o){
+    	observers.remove(o);
+    }
 
     public void setReview(Book book, Review review) {
         this.book = book;

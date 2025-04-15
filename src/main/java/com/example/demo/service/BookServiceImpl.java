@@ -55,9 +55,21 @@ public class BookServiceImpl implements BookService{
 
 	@Override
 	public Book updateBook(Long id, Book book) {
-		return null;
+		Book existingBook = bookRepository.findById(id).orElse(null);
+		if (existingBook != null) {
+			existingBook.setCategory(book.getCategory());
+			existingBook.setAuthor(book.getAuthor());
+			existingBook.setTitle(book.getTitle());
+			existingBook.setPublisher(book.getPublisher());
+			existingBook.setPrice(book.getPrice());
+			existingBook.setIsbn(book.getIsbn());
+			existingBook.setImage(book.getImage());
+			return bookRepository.save(existingBook);
+		} else {
+			return null;
+		}
 	}
-
+	
 	@Override
 	public void deleteBook(Long id) {
 		
@@ -84,30 +96,25 @@ public class BookServiceImpl implements BookService{
 	}
 	
 	public List<Book> sortBooks(String sortBy, boolean ascending) {
-		BookSorter sorter = new BookSorter();
-	    
-	    switch (sortBy) {
-	        case "title":
-	        	 sorter.setStrategy(new SortByTitle());
-	            break;
-	        case "author":
-	        	sorter.setStrategy(new SortByAuthor());
-	            break;
-	        case "publisher":
-	        	sorter.setStrategy(new SortByPublisher());
-	            break;
-	        case "category":
-	        	sorter.setStrategy(new SortByCategory());
-	            break;
-	        case "price":
-	        	sorter.setStrategy(new SortByPrice());
-	            break;
-
-	    }
 	    List<Book> books = getAllBooks();
+	    return sortBooks(books, sortBy, ascending);
+	}
+
+	public List<Book> sortBooks(List<Book> books, String sortBy, boolean ascending) {
+	    BookSorter sorter = new BookSorter();
+
+	    switch (sortBy) {
+	        case "title": sorter.setStrategy(new SortByTitle()); break;
+	        case "author": sorter.setStrategy(new SortByAuthor()); break;
+	        case "publisher": sorter.setStrategy(new SortByPublisher()); break;
+	        case "category": sorter.setStrategy(new SortByCategory()); break;
+	        case "price": sorter.setStrategy(new SortByPrice()); break;
+	    }
+
 	    sorter.sortBooks(books, ascending);
 	    return books;
 	}
+
 	
 	public List<Book> searchBooks(String searchBy, String query) {
 	    switch (searchBy.toLowerCase()) {

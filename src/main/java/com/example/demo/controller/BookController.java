@@ -6,6 +6,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -40,12 +41,23 @@ public class BookController {
 	    model.addAttribute("books", books);
 	    return "fragments/bookTable :: bookRows";
 	}
-
+	
+	@PostMapping("/updateStock")
+	public String updateBook(@RequestParam Long id, @ModelAttribute Book book) {
+		bookService.updateBook(id, book);
+		return "redirect:/administrator";
+	}
 	
 	@GetMapping("/getAllBooks")
 	public List<Book> getAllBooks() {
 	    return bookService.getAllBooks();
 	}
+	
+	@GetMapping("/book_form")
+	public String bookForm() {
+		return "book_form";
+	}
+	
 
 }
 ;

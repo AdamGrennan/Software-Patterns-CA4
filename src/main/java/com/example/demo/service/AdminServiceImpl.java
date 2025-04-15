@@ -17,23 +17,6 @@ public class AdminServiceImpl implements AdminService{
 	@Autowired
 	private AdminInvoker adminInvoker;
 
-	@Override
-	public Book updateBook(Long id, Book book) {
-		Book existingBook= bookService.getBookById(id);
-		if (existingBook != null) {
-			existingBook.setCategory(book.getCategory());
-			existingBook.setAuthor(book.getAuthor());
-			existingBook.setTitle(book.getTitle());
-			existingBook.setPublisher(book.getPublisher());
-			existingBook.setPrice(book.getPrice());
-			existingBook.setIsbn(book.getIsbn());
-			existingBook.setImage(book.getImage());
-			return bookService.addBook(existingBook);
-		} else {
-			return null;
-		}
-	}
-	
 	public void simulateStock(Long bookId, int quantity) {
 	    StockCommand command = new SimulateStockPurchase(bookService, bookId, quantity);
 	    adminInvoker.takeCommand(command);

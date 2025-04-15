@@ -28,11 +28,10 @@ public class CartController {
 	
 
 	@PostMapping("/addToCart")
-	@ResponseBody
 	public String addToCart(@RequestParam Long bookId, HttpSession session) {
 	    User user = (User) session.getAttribute("user");
 	    cartService.addToCart(bookId, user.getId());
-	    return "Book added to cart!";
+	    return "redirect:/cart/viewCart";
 	}
 
 	
@@ -68,8 +67,7 @@ public class CartController {
 	        @RequestParam(defaultValue = "false") boolean usePoints,
 	        HttpSession session) {
 		
-	    User user = (User) session.getAttribute("user");
-	    return orderService.completeOrder(user.getId(), promoCode, usePoints, session);
+	    return orderService.completeOrder(promoCode, usePoints, session);
 	}
 	
 	@PostMapping("/removeFromCart")

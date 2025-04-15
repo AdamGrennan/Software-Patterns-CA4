@@ -11,6 +11,10 @@ public class PurchaseSubject {
     public void attach(PointObserver o) {
         observers.add(o);
     }
+    
+    public void detach(PointObserver o){
+    	observers.remove(o);
+    }
 
     public void setPurchase(User user, double totalSpent) {
         this.user = user;

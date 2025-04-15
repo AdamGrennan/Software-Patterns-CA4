@@ -30,7 +30,7 @@ public class CartServiceImpl implements CartService{
 	    User user = userService.getUserById(userId);
 	    
 	    if(book.getStock() == 0) {
-	    	
+	    	throw new IllegalStateException("This item is currently out of stock.");
 	    }
 
 	    Cart cart = cartRepository.findByUser(user);
@@ -68,13 +68,6 @@ public class CartServiceImpl implements CartService{
 	    }
 
 	    cart.setList(itemService.getByCart(cart));
-
-	    double totalPrice = 0;
-	    for (CartItem item : cart.getList()) {
-	        totalPrice += item.getPrice();
-	    }
-
-	    cart.setTotalPrice(totalPrice);
 	    return cart;
 	}
 
@@ -95,6 +88,13 @@ public class CartServiceImpl implements CartService{
 	        itemService.deleteCartItem(itemToRemove.getId());   
 	        cartRepository.save(cart);                  
 	    }
+	}
+	
+	@Override
+	public void clearCart(Cart cart) {
+		 cart.getList().clear();
+	     cart.setTotalPrice(0);
+	     cartRepository.save(cart);
 	}
 
 }

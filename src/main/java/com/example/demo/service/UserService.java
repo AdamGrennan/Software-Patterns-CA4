@@ -13,10 +13,12 @@ public interface UserService {
 	
 	User addUser(User user);
 	
-	String login(String email, String password, HttpSession session);
+	User login(String email, String password);
 
 	User updateUser(Long id, User user);
 
 	void deleteUser(Long id);
+	
+	List<User> getAllCustomers();
 
 }

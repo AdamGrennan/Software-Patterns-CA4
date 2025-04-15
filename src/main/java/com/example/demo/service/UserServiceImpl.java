@@ -6,11 +6,6 @@ import com.example.demo.factory.Factory;
 import com.example.demo.model.Role;
 import com.example.demo.model.User;
 import com.example.demo.repository.UserRepository;
-import com.example.demo.proxy.IUserAccess;
-import com.example.demo.proxy.UserAccessProxy;
-
-import jakarta.servlet.http.HttpSession;
-
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import java.util.List;
@@ -26,6 +21,12 @@ public class UserServiceImpl implements UserService {
 	public List<User> getAllUsers() {
 		return userRepository.findAll();
 	}
+	
+	@Override
+	public List<User> getAllCustomers() {
+	    return userRepository.findByRole(Role.CUSTOMER);
+	}
+
 
 	@Override
 	public User getUserById(Long id) {
@@ -52,17 +53,10 @@ public class UserServiceImpl implements UserService {
 	}
 	
 	@Override
-	public String login(String email, String password, HttpSession session) {
-	    User user = userRepository.findByEmailAndPassword(email, password);
-
-	    if (user != null) {
-	        session.setAttribute("user", user);
-	        IUserAccess proxy = new UserAccessProxy(user);
-	        return proxy.accessDashboard();
-	    } else {
-	        return "login";
-	    }
+	public User login(String email, String password) {
+	    return userRepository.findByEmailAndPassword(email, password);
 	}
+
 
 	@Override
 	public User updateUser(Long id, User updatedUser) {
