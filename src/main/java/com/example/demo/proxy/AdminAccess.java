@@ -3,15 +3,15 @@ package com.example.demo.proxy;
 import com.example.demo.model.Role;
 import com.example.demo.model.User; 
 
-public class UserAccess implements IUserAccess {
+public class AdminAccess implements IAdminAccess {
     private User user;
 
-    public UserAccess(User user) {
+    public AdminAccess(User user) {
         this.user = user;
     }
 
     @Override
-    public String accessDashboard() {
+    public String performAction() {
         if (user.getRole() == Role.ADMINISTRATOR) {
             return "redirect:/administrator";
         } else if (user.getRole() == Role.CUSTOMER) {

@@ -18,6 +18,9 @@ import com.example.demo.model.User;
 import com.example.demo.service.AdminService;
 import com.example.demo.service.BookService;
 import com.example.demo.service.UserService;
+import com.example.demo.proxy.AdminProxy;
+import com.example.demo.proxy.IAdminAccess;
+
 
 import jakarta.servlet.http.HttpSession;
 
@@ -37,25 +40,52 @@ public class AdminController {
 	private UserService userService;
 	
 	@GetMapping("/updateStock")
-	public String updateForm(@RequestParam Long bookId, Model model) {
+	public String updateForm(@RequestParam Long bookId, HttpSession session, Model model) {
+		User user = (User) session.getAttribute("user");
+	    
+	    IAdminAccess access = new AdminProxy(user);
+	    String result = access.performAction();
+	    
+	    if (result.equals("unauthorized")) {
+	        return "unauthorized"; 
+	    }
+	    
 	    Book book = bookService.getBookById(bookId);
 	    model.addAttribute("book", book);
 	    return "update_book";
 	}
 
-    @GetMapping("/viewCustomers")
-    public String viewCustomers(Model model) {
-        List<User> users = userService.getAllCustomers();
-        model.addAttribute("users", users);
-        return "customer_details";
-    }
+	@GetMapping("/viewCustomers")
+	public String viewCustomers(HttpSession session, Model model) {
+	    User user = (User) session.getAttribute("user");
 
-    
-    @PostMapping("/simulateStock")
-    public String simulateStock(@RequestParam Long bookId, @RequestParam int quantity) {
-        adminService.simulateStock(bookId, quantity);
-        return "redirect:/admin/administrator";
-    }
+	    IAdminAccess access = new AdminProxy(user);
+	    String result = access.performAction();
+
+	    if (result.equals("unauthorized")) {
+	        return "unauthorized"; 
+	    }
+
+	    List<User> users = userService.getAllCustomers();
+	    model.addAttribute("users", users);
+	    return "customer_details";
+	}
+
+	@PostMapping("/simulateStock")
+	public String simulateStock(@RequestParam Long bookId, @RequestParam int quantity, HttpSession session) {
+	    User user = (User) session.getAttribute("user");
+
+	    IAdminAccess access = new AdminProxy(user);
+	    String result = access.performAction();
+
+	    if (result.equals("unauthorized")) {
+	        return "unauthorized"; 
+	    }
+
+	    adminService.simulateStock(bookId, quantity);
+	    return "redirect:/admin/administrator";
+	}
+
     
 	@GetMapping("/administrator")
 	public String administrator(Model model) {
