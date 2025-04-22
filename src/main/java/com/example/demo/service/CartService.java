@@ -9,4 +9,5 @@ public interface CartService {
 	Cart getCart(User user);
 	void removeFromCart(User user, Long bookId);
 	void clearCart(Cart cart);
+	double getDiscountedTotal(User user, String promoCode, boolean usePoints);
 }

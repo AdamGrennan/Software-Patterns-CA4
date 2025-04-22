@@ -10,8 +10,10 @@ import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.ManyToOne;
 import jakarta.persistence.OneToMany;
+import jakarta.persistence.Table;
 
 @Entity
+@Table(name = "user_order") 
 public class UserOrder {
 	
 	@Id
@@ -23,7 +25,7 @@ public class UserOrder {
 	
 	private double total;
 	
-	@OneToMany(fetch = FetchType.EAGER)
+	@OneToMany(mappedBy = "order", fetch = FetchType.EAGER)
 	private List<OrderItem> list = new ArrayList<>();
 	
 	public UserOrder() {
@@ -52,6 +54,14 @@ public class UserOrder {
 
 	public void setUser(User user) {
 		this.user = user;
+	}
+
+	public Long getId() {
+		return id;
+	}
+
+	public void setId(Long id) {
+		this.id = id;
 	}
 	
 

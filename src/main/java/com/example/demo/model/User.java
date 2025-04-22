@@ -1,14 +1,18 @@
 package com.example.demo.model;
 
+import java.util.List;
+
 import jakarta.persistence.DiscriminatorColumn;
 import jakarta.persistence.Entity;
 import jakarta.persistence.EnumType;
 import jakarta.persistence.Enumerated;
+import jakarta.persistence.FetchType;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.Inheritance;
 import jakarta.persistence.InheritanceType;
+import jakarta.persistence.OneToMany;
 
 @Entity
 @Inheritance(strategy = InheritanceType.SINGLE_TABLE)
@@ -29,6 +33,9 @@ public class User {
 	@Enumerated(EnumType.STRING)
 	private Role role;
 	
+	@OneToMany(mappedBy = "user", fetch = FetchType.EAGER)
+	private List<UserOrder> orders;
+
 	public User() {
 		
 	}
@@ -95,6 +102,14 @@ public class User {
 
 	public void setId(Long id) {
 		this.id = id;
+	}
+
+	public List<UserOrder> getOrders() {
+		return orders;
+	}
+
+	public void setOrders(List<UserOrder> orders) {
+		this.orders = orders;
 	}
 
 	

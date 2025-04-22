@@ -71,11 +71,6 @@ public class BookServiceImpl implements BookService{
 	}
 	
 	@Override
-	public void deleteBook(Long id) {
-		
-	}
-
-	@Override
 	public List<Book> getBooksByCategory(String category) {
 		return bookRepository.findByCategoryContainingIgnoreCase(category);
 	}
@@ -115,7 +110,6 @@ public class BookServiceImpl implements BookService{
 	    return books;
 	}
 
-	
 	public List<Book> searchBooks(String searchBy, String query) {
 	    switch (searchBy.toLowerCase()) {
 	        case "title":

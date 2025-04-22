@@ -3,6 +3,8 @@ package com.example.demo.service;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import com.example.demo.discountStrategy.LoyaltyDiscount;
+import com.example.demo.discountStrategy.PromoDiscount;
 import com.example.demo.model.Book;
 import com.example.demo.model.Cart;
 import com.example.demo.model.CartItem;
@@ -67,7 +69,16 @@ public class CartServiceImpl implements CartService{
 	        return cart;
 	    }
 
-	    cart.setList(itemService.getByCart(cart));
+	    cart.getList().clear();  
+	    cart.getList().addAll(itemService.getByCart(cart));
+
+	    double total = 0;
+	    for (CartItem item : cart.getList()) {
+	        total += item.getPrice() * item.getQuantity();
+	    }
+
+	    cart.setTotalPrice(total);  
+	    
 	    return cart;
 	}
 
@@ -92,9 +103,29 @@ public class CartServiceImpl implements CartService{
 	
 	@Override
 	public void clearCart(Cart cart) {
-		 cart.getList().clear();
-	     cart.setTotalPrice(0);
-	     cartRepository.save(cart);
+	    for (CartItem item : cart.getList()) {
+	        itemService.deleteCartItem(item.getId()); 
+	    }
+	    cart.getList().clear();                      
+	    cart.setTotalPrice(0);                       
+	    cartRepository.save(cart);                   
 	}
+
+	
+	public double getDiscountedTotal(User user, String promoCode, boolean usePoints) {
+	    Cart cart = getCart(user);
+	    double total = cart.getTotalPrice();
+
+	    if (usePoints) {
+	        total = new LoyaltyDiscount().applyDiscount(user, total);
+	    }
+
+	    if (promoCode != null && !promoCode.isEmpty()) {
+	        total = new PromoDiscount(promoCode).applyDiscount(user, total);
+	    }
+
+	    return total;
+	}
+
 
 }

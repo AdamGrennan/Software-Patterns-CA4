@@ -12,6 +12,7 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import com.example.demo.model.User;
 import com.example.demo.service.CartService;
 import com.example.demo.service.UserOrderService;
+import com.example.demo.discountStrategy.PromoDiscount;
 import com.example.demo.model.Cart;
 
 import jakarta.servlet.http.HttpSession;
@@ -36,37 +37,39 @@ public class CartController {
 
 	
 	@GetMapping("/viewCart")
-	public String viewCart(HttpSession session, Model model, 
-			@RequestParam(required = false) String error,
-			@RequestParam(required = false) String success) {
-		User user = (User) session.getAttribute("user");
-		Cart cart = cartService.getCart(user);
-		model.addAttribute("cart", cart);
+	public String viewCart(HttpSession session, Model model,
+	                       @RequestParam(required = false) String error,
+	                       @RequestParam(required = false) String success) {
+	    User user = (User) session.getAttribute("user");
+	    Cart cart = cartService.getCart(user);
+
+	    model.addAttribute("cart", cart);
 	    model.addAttribute("books", cart.getList());
 	    model.addAttribute("totalPrice", cart.getTotalPrice());
-	    
-	    if (error != null) {
-	        model.addAttribute("error", error);
-	    }
-	    
-	    if (success != null) {
-	        model.addAttribute("success", success);
-	    }
 
-	   
+	    String promoCode = (String) session.getAttribute("promoCode");
+	    Boolean usePoints = (Boolean) session.getAttribute("usePoints");
+
+	    double discountedTotal = cartService.getDiscountedTotal(user, promoCode, usePoints != null && usePoints);
+	    model.addAttribute("discountedTotal", discountedTotal);
+
+	    if (error != null) model.addAttribute("error", error);
+	    if (success != null) model.addAttribute("success", success);
 	    if (user != null) {
 	        model.addAttribute("user", user);
 	        model.addAttribute("loyaltyPoints", user.getLoyaltyPoints());
 	    }
-	    return "cart"; 
+
+	    return "cart";
 	}
+
 	
 	@PostMapping("/completeOrder")
 	public String completeOrder(
-	        @RequestParam(required = false) String promoCode,
 	        @RequestParam(defaultValue = "false") boolean usePoints,
 	        HttpSession session) {
 		
+		String promoCode = (String) session.getAttribute("promoCode");
 	    return orderService.completeOrder(promoCode, usePoints, session);
 	}
 	
@@ -77,6 +80,21 @@ public class CartController {
 	    cartService.removeFromCart(user, bookId);
 	    return "Item removed";
 	}
+	
+	@PostMapping("/applyPromo")
+	public String applyPromo(@RequestParam String promoCode, HttpSession session) {
+	    PromoDiscount discount = new PromoDiscount(promoCode);
+
+	    if (discount.isValid()) {
+	        session.setAttribute("promoCode", promoCode);
+	        return "redirect:/cart/viewCart?success=promo_applied";
+	    } else {
+	        session.removeAttribute("promoCode");
+	        return "redirect:/cart/viewCart?error=invalid_promo";
+	    }
+	}
+
+
 
 
 

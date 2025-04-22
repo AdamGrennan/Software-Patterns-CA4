@@ -65,6 +65,7 @@ public class UserServiceImpl implements UserService {
 			User existingUser = existingUserOptional.get();
 			existingUser.setUsername(updatedUser.getUsername());
 			existingUser.setPassword(updatedUser.getPassword());
+			existingUser.setLoyaltyPoints(updatedUser.getLoyaltyPoints());
 			return userRepository.save(existingUser);
 		} else {
 			return null;

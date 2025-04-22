@@ -45,15 +45,16 @@ public class AdminController {
 
     @GetMapping("/viewCustomers")
     public String viewCustomers(Model model) {
-        List<User> users = userService.getAllCustomers(); 
+        List<User> users = userService.getAllCustomers();
         model.addAttribute("users", users);
         return "customer_details";
     }
+
     
     @PostMapping("/simulateStock")
     public String simulateStock(@RequestParam Long bookId, @RequestParam int quantity) {
         adminService.simulateStock(bookId, quantity);
-        return "redirect:/administrator";
+        return "redirect:/admin/administrator";
     }
     
 	@GetMapping("/administrator")

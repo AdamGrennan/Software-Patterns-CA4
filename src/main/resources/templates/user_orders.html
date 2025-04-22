@@ -1,7 +1,6 @@
 <!DOCTYPE html>
 <html xmlns:th="http://www.thymeleaf.org" th:inline="javascript">
 <head>
-    <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Orders</title>
 </head>
@@ -38,7 +37,7 @@
                 <td th:text="${item.book.category}">Category</td>
                 <td th:text="${item.book.publisher}">Publisher</td>
                 <td>
-                    <img th:src="${book.image}" alt="Book Image" width="120" height="160"/>
+                    <img th:src="${item.book.image}" alt="Book Image" width="120" height="160"/>
                 </td>
                 <td th:text="${item.quantity}">Quantity</td>
                 <td>
@@ -61,7 +60,7 @@
     </table>
 	
 	<br />
-	<form th:action="@{/home}" method="get">
+	<form th:action="@{/users/home}" method="get">
     <button type="submit">Home</button>
 </form>
 </body>

@@ -31,13 +31,14 @@
 
     <form th:action="@{/books/search}" method="get">
         <label for="searchBy">Search by:</label>
-        <select id="searchBy" name="searchBy">
-            <option value="category">Category</option>
-            <option value="author">Author</option>
-            <option value="publisher">Publisher</option>
-            <option value="title">Title</option>
-        </select>
-        <input type="text" id="query" name="query" placeholder="..." required />
+    <select id="searchBy" name="searchBy">
+    <option value="category" th:selected="${param.searchBy == 'category'}">Category</option>
+    <option value="author" th:selected="${param.searchBy == 'author'}">Author</option>
+    <option value="publisher" th:selected="${param.searchBy == 'publisher'}">Publisher</option>
+    <option value="title" th:selected="${param.searchBy == 'title'}">Title</option>
+	</select>
+<input type="text" id="query" name="query" placeholder="..." th:value="${param.query}" required />
+
         <button type="submit">Search</button>
     </form>
 
@@ -49,6 +50,7 @@
         <option value="author">Author</option>
         <option value="publisher">Publisher</option>
         <option value="price">Price</option>
+        <option value="category">Category</option>
     </select>
 
     <select id="order" name="order">
@@ -109,22 +111,30 @@
     </form>
 
    <script type="text/javascript">
-        function sortBooks() {
-            var sortBy = document.getElementById("sortBy").value;
-            var order = document.getElementById("order").value;
-            var xmlhttp = new XMLHttpRequest();
+function sortBooks() {
+    var sortBy = document.getElementById("sortBy").value;
+    var order = document.getElementById("order").value;
+    var searchBy = document.getElementById("searchBy")?.value || "";
+    var query = document.getElementById("query")?.value || "";
 
-            xmlhttp.onreadystatechange = function() {
-                if (xmlhttp.readyState === 4 && xmlhttp.status === 200) {
-                    document.getElementById("bookTableBody").innerHTML = xmlhttp.responseText;
-                }
-            };
+    var url = "/books/sort?sortBy=" + sortBy + "&order=" + order;
 
-            xmlhttp.open("GET", "/api/sort?sortBy=" + sortBy + "&order=" + order, true);
-            xmlhttp.send();
+    if (searchBy && query) {
+        url += "&searchBy=" + searchBy + "&query=" + query;
+    }
+
+    var xmlhttp = new XMLHttpRequest();
+    xmlhttp.onreadystatechange = function() {
+        if (xmlhttp.readyState === 4 && xmlhttp.status === 200) {
+            document.getElementById("bookTableBody").innerHTML = xmlhttp.responseText;
         }
-		
-		function addBooks(bookId) {
+    };
+
+    xmlhttp.open("GET", url, true);
+    xmlhttp.send();
+}
+
+function addBooks(bookId) {
             var xmlhttp = new XMLHttpRequest();
 
             xmlhttp.onreadystatechange = function() {

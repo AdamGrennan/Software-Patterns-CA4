@@ -47,9 +47,9 @@ public class UserController {
 	        session.setAttribute("user", found);
 
 	        if (found.getRole() == Role.ADMINISTRATOR) {
-	            return "redirect:/administrator";
+	            return "redirect:/admin/administrator";
 	        } else {
-	            return "redirect:/home";
+	            return "redirect:/users/home";
 	        }
 	    }
 
@@ -74,19 +74,4 @@ public class UserController {
 	    session.invalidate(); 
 	    return "redirect:/";
 	}
-
-    @GetMapping("/register")
-	public String register() {
-		return "register";
-	}
-    
-    @GetMapping("/")
-   	public String login() {
-   		return "login";
-   	}
-
-    
-
-
-
 }

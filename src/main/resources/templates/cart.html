@@ -10,6 +10,15 @@
     Your cart is empty. Please add items before completing your order.
 </div>
 
+<div th:if="${error} == 'invalid_promo'" class="alert alert-danger" role="alert">
+    Invalid promo code.
+</div>
+
+<div th:if="${success != null and success.equals('promo_applied')}" class="alert alert-success" role="alert">
+    Promo code applied.
+</div>
+
+
 <div th:if="${success != null and success.equals('complete')}" class="alert alert-success" role="alert">
     Purchase complete.
 </div>
@@ -44,7 +53,15 @@
   </tr>
 </table>
 
-<p>Total: <span th:text="${cart.totalPrice}"></span></p>
+<p th:if="${cart != null}">
+    Total Before Discount: €<span th:text="${cart.totalPrice}"></span>
+</p>
+
+
+<p th:if="${discountedTotal != null and discountedTotal != cart.totalPrice}">
+    <strong>Total After Discount: €<span th:text="${discountedTotal}"></span></strong>
+</p>
+
 
 <form th:action="@{/cart/applyPromo}" method="post">
     <label for="promoCode">Promo Code:</label>
@@ -64,7 +81,7 @@
 
 <br />
 
-<form th:action="@{/home}" method="get">
+<form th:action="@{/users/home}" method="get">
     <button type="submit">Home</button>
 </form>
    <script type="text/javascript">

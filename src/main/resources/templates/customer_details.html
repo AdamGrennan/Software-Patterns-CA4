@@ -1,31 +1,59 @@
 <!DOCTYPE html>
 <html xmlns:th="http://www.thymeleaf.org" th:inline="javascript">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Orders</title>
+    <title>Customer Purchase History</title>
 </head>
 <body>
     <h2>Customer Details & Purchase History</h2>
- <table border="1">
-        <thead>
-            <tr>
-                <th>Username</th>
-                <th>Email</th>
-                <th>Address</th>
-                <th>Payment Method</th>
-                <th>Loyalty Points</th>
-            </tr>
-        </thead>
-        <tbody id="userTableBody">
-            <tr th:each="user : ${users}">
-                <td th:text="${user.username}"></td>
-                <td th:text="${user.email}"></td>
-                <td th:text="${user.address}"></td>
-                <td th:text="${user.paymentMethod}"></td>
-                <td th:text="${user.loyaltyPoints}"></td>
-            </tr>
-        </tbody>
-    </table>
+
+    <div th:each="user : ${users}">
+        <h3 th:text="'Customer: ' + ${user.username}"></h3>
+        <p>
+            Email: <span th:text="${user.email}"></span><br />
+            Address: <span th:text="${user.address}"></span><br />
+            Payment Method: <span th:text="${user.paymentMethod}"></span><br />
+            Loyalty Points: <span th:text="${user.loyaltyPoints}"></span>
+        </p>
+
+<table border="1">
+    <thead>
+        <tr>
+            <th>Order ID</th>
+        </tr>
+    </thead>
+    <tbody>
+        <tr th:each="order : ${user.orders}">
+            <td th:text="${order.id}"></td>
+            <td colspan="4">
+                <table border="1">
+                    <thead>
+                        <tr>
+                            <th></th>
+                            <th>Book Title</th>
+                            <th>Quantity</th>
+                            <th>Price</th>
+                            <th>Total</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr th:each="item : ${order.list}">
+                            <td></td>
+                            <td th:text="${item.book.title}">Book Title</td>
+                            <td th:text="${item.quantity}">Quantity</td>
+                            <td th:text="${item.book.price}">Price</td>
+                            <td th:text="${item.price * item.quantity}">Total</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </td>
+        </tr>
+    </tbody>
+</table>
+    </div>
+	<br />
+
+<form th:action="@{/admin/administrator}" method="get">
+    <button type="submit">Home</button>
+</form>
 </body>
 </html>

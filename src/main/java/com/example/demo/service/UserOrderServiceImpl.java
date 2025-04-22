@@ -2,7 +2,6 @@ package com.example.demo.service;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Map;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -10,6 +9,8 @@ import org.springframework.stereotype.Service;
 import com.example.demo.model.Book;
 import com.example.demo.model.User;
 import com.example.demo.model.UserOrder;
+import com.example.demo.observer.LoyaltyPointsObserver;
+import com.example.demo.observer.PurchaseSubject;
 import com.example.demo.repository.BookRepository;
 import com.example.demo.repository.CartRepository;
 import com.example.demo.repository.OrderItemRepository;
@@ -18,10 +19,10 @@ import com.example.demo.repository.UserRepository;
 import com.example.demo.model.Cart;
 import com.example.demo.model.CartItem;
 import com.example.demo.model.OrderItem;
-import com.example.demo.templateMethod.LoyaltyPurchase;
-import com.example.demo.templateMethod.PromoPurchase;
-import com.example.demo.templateMethod.Purchase;
-import com.example.demo.templateMethod.RegularPurchase;
+import com.example.demo.discountStrategy.DiscountStrategy;
+import com.example.demo.discountStrategy.LoyaltyDiscount;
+import com.example.demo.discountStrategy.NoDiscount;
+import com.example.demo.discountStrategy.PromoDiscount;
 
 import jakarta.servlet.http.HttpSession;
 
@@ -29,49 +30,48 @@ import jakarta.servlet.http.HttpSession;
 public class UserOrderServiceImpl implements UserOrderService {
 	
 	@Autowired
-	private UserRepository userRepository;
+	private UserService userService;
 	
 	@Autowired
 	private UserOrderRepository orderRepository;
 	
 	@Autowired
-	private OrderItemRepository orderItemRepository;
+	private OrderItemService orderItemService;
 	
 	@Autowired
-	private BookRepository bookRepository;
+	private BookService bookService;
 	
 	@Autowired
-	private CartRepository cartRepository;
-	
-	@Autowired
-	private CartItemService itemService; 
+	private CartService cartService; 
 
-	@Override
-	public List<UserOrder> getAllUserOrders() {
-		return null;
-		
-	}
-	
 	public String completeOrder(String promoCode, boolean usePoints, HttpSession session) {
 	    User user = (User) session.getAttribute("user");
-	    Cart cart = cartRepository.findByUser(user);
-	    
+	    Cart cart = cartService.getCart(user);
+
 	    if (cart == null || cart.getList().isEmpty()) {
-	    	return "redirect:/cart/viewCart?error=empty";
+	        return "redirect:/cart/viewCart?error=empty";
+	    }
+
+	    double originalTotal = cart.getTotalPrice();
+	    double discountedTotal = originalTotal;
+
+	    if (usePoints) {
+	        discountedTotal = new LoyaltyDiscount().applyDiscount(user, discountedTotal);
+	    }
+	    if (promoCode != null && !promoCode.isEmpty()) {
+	        discountedTotal = new PromoDiscount(promoCode).applyDiscount(user, discountedTotal);
+	    }
+
+	    double discountFactor;
+	    if (originalTotal == 0) {
+	        discountFactor = 1;
+	    } else {
+	        discountFactor = discountedTotal / originalTotal;
 	    }
 
 	    UserOrder order = new UserOrder();
 	    order.setUser(user);
 	    order = orderRepository.save(order);
-
-	    Purchase purchase;
-	    if (promoCode != null && !promoCode.isEmpty()) {
-	        purchase = new PromoPurchase(orderRepository, userRepository, promoCode, cart, cartRepository, itemService);
-	    } else if (usePoints && user.getLoyaltyPoints() >= 100) {
-	        purchase = new LoyaltyPurchase(orderRepository, userRepository, cart, cartRepository, itemService);
-	    } else {
-	        purchase = new RegularPurchase(orderRepository, userRepository, cart, cartRepository, itemService);
-	    }
 
 	    List<OrderItem> orderItems = new ArrayList<>();
 	    for (CartItem item : cart.getList()) {
@@ -79,29 +79,50 @@ public class UserOrderServiceImpl implements UserOrderService {
 	        int quantity = item.getQuantity();
 
 	        book.setStock(book.getStock() - quantity);
-	        bookRepository.save(book);
+	        bookService.updateBook(book.getId(), book);
 
 	        OrderItem orderItem = new OrderItem();
 	        orderItem.setBook(book);
 	        orderItem.setQuantity(quantity);
-	        orderItem.setPrice(item.getPrice());
+
+	        double originalItemPrice = item.getPrice();
+	        double discountedPrice = originalItemPrice * discountFactor;
+
+	        orderItem.setPrice(discountedPrice);
 	        orderItem.setOrder(order);
 
-	        orderItem = orderItemRepository.save(orderItem);
+	        orderItem = orderItemService.addItem(orderItem);
 	        orderItems.add(orderItem);
 	    }
-
+	    
 	    order.setList(orderItems);
-	    orderRepository.save(order); 
+	    order.setTotal(discountedTotal);
+	    orderRepository.save(order);
 
-	    purchase.completeOrder(order);
+	    cartService.clearCart(cart);
+
+	    int earnedPoints = (int) discountedTotal;
+	    user.setLoyaltyPoints(user.getLoyaltyPoints() + earnedPoints);
+
+	    userService.updateUser(user.getId(), user); 
 	    session.setAttribute("user", user);
+	    session.removeAttribute("promoCode");
+
 	    return "redirect:/cart/viewCart?success=complete";
 	}
+
 	
 	public List<UserOrder> getUserOrders(User user){
 		return orderRepository.findByUser(user);
 
 	}
 
+
+	@Override
+	public List<UserOrder> getAllUserOrders() {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
 }
+;

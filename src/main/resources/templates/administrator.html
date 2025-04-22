@@ -30,6 +30,7 @@
         <option value="author">Author</option>
         <option value="publisher">Publisher</option>
         <option value="price">Price</option>
+		<option value="category">Category</option>
     </select>
 
     <select id="order" name="order">
@@ -81,14 +82,11 @@
 				<button type="submit">Simulate</button>
 				</form>
 				</td>
-				  <td>
-                    <button type="button" th:onclick="'deleteBook(' + ${book.id} + ')'">Delete</button>
-                </td>
             </tr>
         </tbody>
     </table>
 		 <br />
-		 <form th:action="@{/book_form}" method="get">
+		 <form th:action="@{/books/book_form}" method="get">
         <button type="submit">Add Book</button>
     </form>
 	 <br />
@@ -100,34 +98,28 @@
         <button type="submit">Logout</button>
     </form>
 	   <script type="text/javascript">
-        function sortBooks() {
-            var sortBy = document.getElementById("sortBy").value;
-            var order = document.getElementById("order").value;
-            var xmlhttp = new XMLHttpRequest();
+function sortBooks() {
+    var sortBy = document.getElementById("sortBy").value;
+    var order = document.getElementById("order").value;
+    var searchBy = document.getElementById("searchBy")?.value || "";
+    var query = document.getElementById("query")?.value || "";
 
-            xmlhttp.onreadystatechange = function() {
-                if (xmlhttp.readyState === 4 && xmlhttp.status === 200) {
-                    document.getElementById("bookTableBody").innerHTML = xmlhttp.responseText;
-                }
-            };
+    var url = "/books/sort?sortBy=" + sortBy + "&order=" + order;
 
-            xmlhttp.open("GET", "/api/sort?sortBy=" + sortBy + "&order=" + order, true);
-            xmlhttp.send();
+    if (searchBy && query) {
+        url += "&searchBy=" + searchBy + "&query=" + query;
+    }
+
+    var xmlhttp = new XMLHttpRequest();
+    xmlhttp.onreadystatechange = function() {
+        if (xmlhttp.readyState === 4 && xmlhttp.status === 200) {
+            document.getElementById("bookTableBody").innerHTML = xmlhttp.responseText;
         }
-		
-		function deleteBook(bookId) {
-            var xmlhttp = new XMLHttpRequest();
+    };
 
-            xmlhttp.onreadystatechange = function() {
-                if (xmlhttp.readyState === 4 && xmlhttp.status === 200) {
-                    alert("Book has been deleted!");
-                }
-            };
-
-              xmlhttp.open("POST", "/cart/addToCart", true);
-			  xmlhttp.setRequestHeader("Content-type","application/x-www-form-urlencoded");
-			  xmlhttp.send("bookId=" + bookId);
-        }
+    xmlhttp.open("GET", url, true);
+    xmlhttp.send();
+}
     </script>
 </body>
 </html>
