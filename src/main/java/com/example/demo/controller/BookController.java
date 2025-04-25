@@ -25,12 +25,6 @@ public class BookController {
 	@Autowired
 	private BookService bookService;
 	
-	@PostMapping("/addBook")
-	public String addBook(Book book) {
-		bookService.addBook(book);
-		return "redirect:/admin/administrator";
-	}
-	
 	@GetMapping("/search")
 	public String searchBooks(
 	    @RequestParam String searchBy, @RequestParam String query, Model model, HttpSession session) {
@@ -48,7 +42,7 @@ public class BookController {
 	@GetMapping("/sort")
 	public String sortBooks(@RequestParam String sortBy, @RequestParam String order, 
 		@RequestParam(required = false) String searchBy, @RequestParam(required = false) String query,
-	    Model model) {
+	    Model model, HttpSession session) {
 	    boolean ascending = order.equalsIgnoreCase("asc");
 
 	    List<Book> books;
@@ -60,24 +54,17 @@ public class BookController {
 	    }
 
 	    model.addAttribute("books", books);
-	    return "bookTable :: bookRows";
-	}
-
-	
-	@PostMapping("/updateStock")
-	public String updateBook(@RequestParam Long id, @ModelAttribute Book book) {
-		bookService.updateBook(id, book);
-		return "redirect:/admin/administrator";
+	    User user = (User) session.getAttribute("user");
+	    if (user != null && user.getRole() == Role.ADMINISTRATOR) {
+	        return "adminTable :: bookRows";
+	    } else {
+	        return "bookTable :: bookRows";
+	    }
 	}
 	
 	@GetMapping("/getAllBooks")
 	public List<Book> getAllBooks() {
 	    return bookService.getAllBooks();
-	}
-	
-	@GetMapping("/book_form")
-	public String bookForm() {
-		return "book_form";
 	}
 	
 

@@ -1,4 +1,4 @@
-package com.example.demo.discountStrategy;
+package com.example.demo.discount;
 
 import com.example.demo.model.User;
 

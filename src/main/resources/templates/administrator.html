@@ -5,23 +5,18 @@
 </head>
 <body>
     <h1>Administrator Dashboard</h1>
-	    <p>
-        Welcome Admin, <span th:text="${session.user.username}">User</span><br />
-    </p>
-
     <h2>View & Search Stock</h2>
     <form th:action="@{/books/search}" method="get">
         <label for="searchBy">Search by:</label>
         <select id="searchBy" name="searchBy">
-            <option value="category">Category</option>
-            <option value="author">Author</option>
-            <option value="publisher">Publisher</option>
-            <option value="title">Title</option>
+    <option value="category" th:selected="${param.searchBy == 'category'}">Category</option>
+    <option value="author" th:selected="${param.searchBy == 'author'}">Author</option>
+    <option value="publisher" th:selected="${param.searchBy == 'publisher'}">Publisher</option>
+    <option value="title" th:selected="${param.searchBy == 'title'}">Title</option>
         </select>
-        <input type="text" id="query" name="query" placeholder="..." required />
+       <input type="text" id="query" name="query" placeholder="..." th:value="${param.query}" required />
         <button type="submit">Search</button>
     </form>
-
     <br />
 
     <label for="sortBy">Sort by:</label>
@@ -55,9 +50,10 @@
                 <th>Stock</th>
                 <th>Update</th>
                 <th>Simulate Stock</th>
+                <th>Delete</th>
             </tr>
         </thead>
-        <tbody>
+       <tbody id="adminTableBody">
             <tr th:each="book : ${books}">
                 <td th:text="${book.title}"></td>
                 <td th:text="${book.author}"></td>
@@ -78,15 +74,21 @@
 				<td>
 				<form th:action="@{/admin/simulateStock}" method="post">
 				<input type="hidden" name="bookId" th:value="${book.id}" />
-				<input type="number" name="quantity" required />
+				<input type="number" name="quantity" min="1" required />
 				<button type="submit">Simulate</button>
 				</form>
 				</td>
+				 <td>
+                    <form th:action="@{/admin/deleteBook}" method="post">
+					<input type="hidden" name="bookId" th:value="${book.id}" />
+					<button type="submit">Delete</button>
+					</form>
+                </td>
             </tr>
         </tbody>
     </table>
 		 <br />
-		 <form th:action="@{/books/book_form}" method="get">
+		 <form th:action="@{/admin/book_form}" method="get">
         <button type="submit">Add Book</button>
     </form>
 	 <br />
@@ -113,7 +115,7 @@ function sortBooks() {
     var xmlhttp = new XMLHttpRequest();
     xmlhttp.onreadystatechange = function() {
         if (xmlhttp.readyState === 4 && xmlhttp.status === 200) {
-            document.getElementById("bookTableBody").innerHTML = xmlhttp.responseText;
+            document.getElementById("adminTableBody").innerHTML = xmlhttp.responseText;
         }
     };
 

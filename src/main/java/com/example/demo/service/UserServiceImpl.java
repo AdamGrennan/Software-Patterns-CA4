@@ -35,6 +35,16 @@ public class UserServiceImpl implements UserService {
 
 	@Override
 	public User addUser(User user) {
+	    if (user.getUsername() == null || user.getUsername().isEmpty()) {
+	        throw new IllegalArgumentException("Username is required.");
+	    }
+	    if (user.getEmail() == null || !user.getEmail().matches("^[A-Za-z0-9+_.-]+@(.+)$")) {
+	        throw new IllegalArgumentException("Invalid email format.");
+	    }
+	    if (user.getPassword() == null || user.getPassword().length() < 8) {
+	        throw new IllegalArgumentException("Password must be at least 8 characters long.");
+	    }
+
 		User existingUser = userRepository.findByUsernameAndEmail(user.getUsername(), user.getEmail());
 		if(existingUser != null) {
 			return null;

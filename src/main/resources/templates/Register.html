@@ -2,28 +2,42 @@
 <html xmlns:th="http://www.thymeleaf.org" th:inline="javascript">
 <head>
     <title>Register</title>
-    <script>
-        function toggleFields() {
-            const role = document.querySelector('input[name="role"]:checked')?.value;
-            const customerFields = document.getElementById('customerFields');
-            const adminKeyField = document.getElementById('adminKeyField');
+<script>
+    function toggleCustomerFields() {
+        const role = document.querySelector('input[name="role"]:checked').value;
+        const customerFields = document.getElementById('customerFields');
+        const shippingInput = document.getElementById('address');
+        const paymentInput = document.getElementById('paymentMethod');
+        const adminKeyField = document.getElementById('adminKeyField');
 
-            customerFields.style.display = role === 'CUSTOMER' ? 'block' : 'none';
-            adminKeyField.style.display = role === 'ADMINISTRATOR' ? 'block' : 'none';
+        if (role === 'CUSTOMER') {
+            customerFields.style.display = 'block';
+            shippingInput.required = true;
+            paymentInput.required = true;
+            adminKeyField.style.display = 'none';
+            document.getElementById('adminKey').required = false;
+        } else {
+            customerFields.style.display = 'none';
+            shippingInput.required = false;
+            paymentInput.required = false;
+            adminKeyField.style.display = 'block';
+            document.getElementById('adminKey').required = true;
         }
+    }
 
-        document.addEventListener('DOMContentLoaded', () => {
-            const roleInputs = document.querySelectorAll('input[name="role"]');
-            roleInputs.forEach(input => input.addEventListener('change', toggleFields));
-            toggleFields();
-        });
-    </script>
+    document.addEventListener('DOMContentLoaded', () => {
+        const roleInputs = document.querySelectorAll('input[name="role"]');
+        roleInputs.forEach(input => input.addEventListener('change', toggleCustomerFields));
+        toggleCustomerFields(); 
+    });
+</script>
+
 </head>
 <body>
     <h1>Register</h1>
     <p th:if="${error}" style="color: red;" th:text="${error}"></p>
 
-    <form th:action="@{/users/addUser}" method="post">
+    <form th:action="@{/users/addUser}" th:object="${user}" method="post">
         <label for="email">Email:</label>
         <input type="text" id="email" name="email" required />
         <br />
@@ -36,23 +50,25 @@
         <input type="text" id="username" name="username" required />
         <br />
 
-            <p>Select Role</p>
-            <label>
-                <input type="radio" name="role" value="CUSTOMER" required />
-                Customer
-            </label>
-            <label>
-                <input type="radio" name="role" value="ADMINISTRATOR" />
-                Administrator
-            </label>
+		<fieldset>
+			<legend>Select Role</legend>
+			<label>
+			<input type="radio" th:field="*{role}" value="CUSTOMER" /> Customer
+			</label>
+			<br />
+    <label>
+        <input type="radio" th:field="*{role}" value="ADMINISTRATOR" /> Administrator
+    </label>
+</fieldset>
+
         <br/>
         <div id="customerFields" style="display: none;">
             <label for="address">Shipping Address:</label>
-            <input type="text" id="address" name="shippingAddress" />
+            <input type="text" id="address" name="shippingAddress" required />
             <br />
 
             <label for="paymentMethod">Payment Method:</label>
-            <input type="text" id="paymentMethod" name="paymentMethod" />
+            <input type="text" id="paymentMethod" name="paymentMethod" required />
             <br />
         </div>
         <div id="adminKeyField" style="display: none;">

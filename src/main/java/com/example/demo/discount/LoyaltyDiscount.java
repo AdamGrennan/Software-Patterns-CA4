@@ -1,9 +1,8 @@
-package com.example.demo.discountStrategy;
+package com.example.demo.discount;
 
 import com.example.demo.model.User;
 
 public class LoyaltyDiscount implements DiscountStrategy {
-
     @Override
     public double applyDiscount(User user, double total) {
         if (user.getLoyaltyPoints() >= 100) {

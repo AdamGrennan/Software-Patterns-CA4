@@ -1,0 +1,35 @@
+<th:block th:fragment="bookRows">
+    <tbody id="adminTableBody">
+            <tr th:each="book : ${books}">
+                <td th:text="${book.title}"></td>
+                <td th:text="${book.author}"></td>
+                <td th:text="${book.price}"></td>
+                <td th:text="${book.category}"></td>
+                <td th:text="${book.publisher}"></td>
+                <td th:text="${book.isbn}"></td>
+				 <td>
+                    <img th:src="${book.image}" alt="Book Image" width="120" height="160"/>
+                </td>
+                <td th:text="${book.stock}"></td>
+                <td>
+                    <form th:action="@{/admin/updateStock}" method="get">
+					<input type="hidden" name="bookId" th:value="${book.id}" />
+					<button type="submit">Update</button>
+					</form>
+                </td>
+				<td>
+				<form th:action="@{/admin/simulateStock}" method="post">
+				<input type="hidden" name="bookId" th:value="${book.id}" />
+				<input type="number" name="quantity" required />
+				<button type="submit">Simulate</button>
+				</form>
+				</td>
+				<td>
+                    <form th:action="@{/admin/deleteBook}" method="post">
+					<input type="hidden" name="bookId" th:value="${book.id}" />
+					<button type="submit">Delete</button>
+					</form>
+                </td>
+            </tr>
+    </tbody>
+</th:block>

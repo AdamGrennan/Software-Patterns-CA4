@@ -6,6 +6,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
+import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -39,6 +40,41 @@ public class AdminController {
 	@Autowired
 	private UserService userService;
 	
+	@GetMapping("/book_form")
+	public String bookForm(HttpSession session) {
+		User user = (User) session.getAttribute("user");
+	    
+	    IAdminAccess access = new AdminProxy(user);
+	    String result = access.performAction();
+	    
+	    if (result.equals("unauthorized")) {
+	        return "unauthorized"; 
+	    }
+		
+		return "book_form";
+	}
+	
+	@PostMapping("/addBook")
+	public String addBook(Book book, HttpSession session) {
+		User user = (User) session.getAttribute("user");
+	    
+	    IAdminAccess access = new AdminProxy(user);
+	    String result = access.performAction();
+	    
+	    if (result.equals("unauthorized")) {
+	        return "unauthorized"; 
+	    }
+		bookService.addBook(book);
+		return "redirect:/admin/administrator";
+	}
+	
+	@PostMapping("/deleteBook") 
+	public String deleteBook(@RequestParam Long id) {
+	    bookService.deleteBook(id);
+	    return "redirect:/admin/administrator";
+	}
+
+	
 	@GetMapping("/updateStock")
 	public String updateForm(@RequestParam Long bookId, HttpSession session, Model model) {
 		User user = (User) session.getAttribute("user");
@@ -53,6 +89,12 @@ public class AdminController {
 	    Book book = bookService.getBookById(bookId);
 	    model.addAttribute("book", book);
 	    return "update_book";
+	}
+	
+	@PostMapping("/updateStock")
+	public String updateBook(@RequestParam Long id, @ModelAttribute Book book) {
+		bookService.updateBook(id, book);
+		return "redirect:/admin/administrator";
 	}
 
 	@GetMapping("/viewCustomers")

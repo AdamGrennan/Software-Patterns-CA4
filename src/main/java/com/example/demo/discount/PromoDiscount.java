@@ -1,4 +1,4 @@
-package com.example.demo.discountStrategy;
+package com.example.demo.discount;
 
 import com.example.demo.model.User;
 
@@ -11,13 +11,13 @@ public class PromoDiscount implements DiscountStrategy {
 
     @Override
     public double applyDiscount(User user, double total) {
-        if ("SAVE20".equalsIgnoreCase(promoCode)) {
+        if ("BOOK20".equalsIgnoreCase(promoCode)) {
             return total * 0.80; 
         }
         return total;
     }
     
     public boolean isValid() {
-        return "SAVE20".equalsIgnoreCase(promoCode);
+        return "BOOK20".equalsIgnoreCase(promoCode);
     }
 }

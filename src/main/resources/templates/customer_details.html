@@ -5,6 +5,10 @@
 </head>
 <body>
     <h2>Customer Details & Purchase History</h2>
+	
+	<form th:action="@{/admin/administrator}" method="get">
+    <button type="submit">Home</button>
+	</form>
 
     <div th:each="user : ${users}">
         <h3 th:text="'Customer: ' + ${user.username}"></h3>
@@ -15,20 +19,20 @@
             Loyalty Points: <span th:text="${user.loyaltyPoints}"></span>
         </p>
 
-<table border="1">
+<table border="1" style="border-collapse: collapse; width: 100%;">
     <thead>
         <tr>
-            <th>Order ID</th>
+            <th style="width: 10%;">Order ID</th>
+            <th style="width: 90%;">Order Details</th>
         </tr>
     </thead>
     <tbody>
         <tr th:each="order : ${user.orders}">
-            <td th:text="${order.id}"></td>
-            <td colspan="4">
-                <table border="1">
+            <td th:text="${order.id}" style="text-align: center;"></td>
+            <td>
+                <table border="1" style="width: 100%; border-collapse: collapse;">
                     <thead>
                         <tr>
-                            <th></th>
                             <th>Book Title</th>
                             <th>Quantity</th>
                             <th>Price</th>
@@ -37,11 +41,10 @@
                     </thead>
                     <tbody>
                         <tr th:each="item : ${order.list}">
-                            <td></td>
-                            <td th:text="${item.book.title}">Book Title</td>
-                            <td th:text="${item.quantity}">Quantity</td>
-                            <td th:text="${item.book.price}">Price</td>
-                            <td th:text="${item.price * item.quantity}">Total</td>
+                            <td th:text="${item.book.title}"></td>
+                            <td th:text="${item.quantity}"></td>
+                            <td th:text="${item.book.price}"></td>
+                            <td th:text="${item.price * item.quantity}"></td>
                         </tr>
                     </tbody>
                 </table>
@@ -49,11 +52,8 @@
         </tr>
     </tbody>
 </table>
+
     </div>
 	<br />
-
-<form th:action="@{/admin/administrator}" method="get">
-    <button type="submit">Home</button>
-</form>
 </body>
 </html>

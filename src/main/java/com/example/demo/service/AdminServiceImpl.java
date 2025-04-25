@@ -21,7 +21,5 @@ public class AdminServiceImpl implements AdminService{
 	    StockCommand command = new SimulateStockPurchase(bookService, bookId, quantity);
 	    adminInvoker.takeCommand(command);
 	    adminInvoker.placeCommands();
-	}
-
-	
+	}	
 }

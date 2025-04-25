@@ -1,10 +1,13 @@
 package com.example.demo.service;
 
+import java.util.HashMap;
+import java.util.Map;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import com.example.demo.discountStrategy.LoyaltyDiscount;
-import com.example.demo.discountStrategy.PromoDiscount;
+import com.example.demo.discount.LoyaltyDiscount;
+import com.example.demo.discount.PromoDiscount;
 import com.example.demo.model.Book;
 import com.example.demo.model.Cart;
 import com.example.demo.model.CartItem;
@@ -112,20 +115,34 @@ public class CartServiceImpl implements CartService{
 	}
 
 	
-	public double getDiscountedTotal(User user, String promoCode, boolean usePoints) {
+	public Map<String, Object> getDiscountTotal(User user, String promoCode, boolean usePoints) {
 	    Cart cart = getCart(user);
-	    double total = cart.getTotalPrice();
+	    double originalTotal = cart.getTotalPrice();
+	    double total = originalTotal;
+	    
+	    double loyaltyDiscountAmount = 0;
+	    double promoDiscountAmount = 0;
 
-	    if (usePoints) {
-	        total = new LoyaltyDiscount().applyDiscount(user, total);
+	    if (usePoints && user.getLoyaltyPoints() >= 100) {
+	        double discounted = new LoyaltyDiscount().applyDiscount(user, total);
+	        loyaltyDiscountAmount = total - discounted;
+	        total = discounted;
 	    }
 
 	    if (promoCode != null && !promoCode.isEmpty()) {
-	        total = new PromoDiscount(promoCode).applyDiscount(user, total);
+	        double discounted = new PromoDiscount(promoCode).applyDiscount(user, total);
+	        promoDiscountAmount = total - discounted;
+	        total = discounted;
 	    }
 
-	    return total;
+	    Map<String, Object> result = new HashMap<>();
+	    result.put("originalTotal", originalTotal);
+	    result.put("loyaltyDiscount", loyaltyDiscountAmount);
+	    result.put("promoDiscount", promoDiscountAmount);
+	    result.put("finalTotal", total);
+	    return result;
 	}
+
 
 
 }

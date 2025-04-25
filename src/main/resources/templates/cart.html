@@ -53,14 +53,22 @@
   </tr>
 </table>
 
-<p th:if="${cart != null}">
-    Total Before Discount: €<span th:text="${cart.totalPrice}"></span>
+<p>
+    Total Before Discount: €<span th:text="${originalTotal}">0.00</span>
 </p>
 
-
-<p th:if="${discountedTotal != null and discountedTotal != cart.totalPrice}">
-    <strong>Total After Discount: €<span th:text="${discountedTotal}"></span></strong>
+<p th:if="${loyaltyDiscount != null and loyaltyDiscount > 0}">
+    Loyalty Discount: -€<span th:text="${loyaltyDiscount}">0.00</span>
 </p>
+
+<p th:if="${promoDiscount != null and promoDiscount > 0}">
+    Promo Discount: -€<span th:text="${promoDiscount}">0.00</span>
+</p>
+
+<p>
+    <strong>Total After Discount: €<span th:text="${discountedTotal}">0.00</span></strong>
+</p>
+
 
 
 <form th:action="@{/cart/applyPromo}" method="post">

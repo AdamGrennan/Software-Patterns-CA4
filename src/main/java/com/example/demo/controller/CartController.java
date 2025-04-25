@@ -1,5 +1,7 @@
 package com.example.demo.controller;
 
+import java.util.Map;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -12,7 +14,7 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import com.example.demo.model.User;
 import com.example.demo.service.CartService;
 import com.example.demo.service.UserOrderService;
-import com.example.demo.discountStrategy.PromoDiscount;
+import com.example.demo.discount.PromoDiscount;
 import com.example.demo.model.Cart;
 
 import jakarta.servlet.http.HttpSession;
@@ -50,8 +52,11 @@ public class CartController {
 	    String promoCode = (String) session.getAttribute("promoCode");
 	    Boolean usePoints = (Boolean) session.getAttribute("usePoints");
 
-	    double discountedTotal = cartService.getDiscountedTotal(user, promoCode, usePoints != null && usePoints);
-	    model.addAttribute("discountedTotal", discountedTotal);
+	    Map<String, Object> discount = cartService.getDiscountTotal(user, promoCode, usePoints != null && usePoints);
+	    model.addAttribute("originalTotal", discount.get("originalTotal"));
+	    model.addAttribute("loyaltyDiscount", discount.get("loyaltyDiscount"));
+	    model.addAttribute("promoDiscount", discount.get("promoDiscount"));
+	    model.addAttribute("discountedTotal", discount.get("finalTotal"));
 
 	    if (error != null) model.addAttribute("error", error);
 	    if (success != null) model.addAttribute("success", success);

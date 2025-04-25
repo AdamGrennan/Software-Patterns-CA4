@@ -28,24 +28,25 @@ public class ReviewController {
 	@Autowired
 	private BookService bookService;
 	
-    @GetMapping("/review")
+    @GetMapping
     public String review(@RequestParam Long bookId, Model model) {
         Book book = bookService.getBookById(bookId);
         model.addAttribute("book", book);
         return "review";
     }
 
-	@PostMapping("/addReview")
-	public String addReview(
-	    @RequestParam Long bookId,
-	    @RequestParam int rating,
-	    @RequestParam String comment,
-	    HttpSession session
-	) {
-	    User user = (User) session.getAttribute("user");
-	    reviewService.addReview(bookId, rating, comment, user);
-	    return "user_orders";
-	}
+    @PostMapping("/addReview")
+    public String addReview(
+        @RequestParam Long bookId,
+        @RequestParam int rating,
+        @RequestParam String comment,
+        HttpSession session
+    ) {
+        User user = (User) session.getAttribute("user");
+        reviewService.addReview(bookId, rating, comment, user);
+        return "redirect:/orders/userOrders";
+    }
+
 
 	
 	@GetMapping("/viewReviews")

@@ -8,6 +8,7 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 
 import com.example.demo.model.Book;
 import com.example.demo.model.Role;
@@ -29,7 +30,15 @@ public class UserController {
 	private BookService bookService;
 
 	@PostMapping("/addUser")
-	public String addUser(User user, Model model) {
+	public String addUser(User user, Model model, @RequestParam(required = false) String adminKey) {
+		try {
+			if (user.getRole() == Role.ADMINISTRATOR) {
+		        String ADMIN_KEY = "book123"; 
+		         if (adminKey == null || !adminKey.equals(ADMIN_KEY)) {
+		                model.addAttribute("error", "Invalid Admin Key.");
+		                return "register";
+		            }
+		        }
 		User savedUser = userService.addUser(user);
 		if (savedUser != null) {
 			   return "redirect:/";
@@ -37,6 +46,10 @@ public class UserController {
 			model.addAttribute("error", "User already exists.");
 	        return "register"; 
 		}
+		}catch (IllegalArgumentException e) {
+	        model.addAttribute("error", e.getMessage());
+	        return "register";
+	    }
 	}
 	
 	@PostMapping("/login")
@@ -77,4 +90,11 @@ public class UserController {
 	public String showUnauthorizedPage() {
 	    return "unauthorized";
 	}
+	
+	@GetMapping("/register")
+	public String register(Model model) {
+	    model.addAttribute("user", new User()); 
+	    return "register";
+	}
+
 }

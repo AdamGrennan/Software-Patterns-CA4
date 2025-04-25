@@ -6,6 +6,8 @@ import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import com.example.demo.discount.LoyaltyDiscount;
+import com.example.demo.discount.PromoDiscount;
 import com.example.demo.model.Book;
 import com.example.demo.model.User;
 import com.example.demo.model.UserOrder;
@@ -13,8 +15,6 @@ import com.example.demo.repository.UserOrderRepository;
 import com.example.demo.model.Cart;
 import com.example.demo.model.CartItem;
 import com.example.demo.model.OrderItem;
-import com.example.demo.discountStrategy.LoyaltyDiscount;
-import com.example.demo.discountStrategy.PromoDiscount;
 
 import jakarta.servlet.http.HttpSession;
 
