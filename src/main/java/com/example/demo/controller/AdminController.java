@@ -46,14 +46,6 @@ public class AdminController {
 		return "redirect:/admin/administrator";
 	}
 	
-	/*
-	@PostMapping("/deleteBook") 
-	public String deleteBook(@RequestParam Long id) {
-		adminFacade.deleteBook(id);
-	    return "redirect:/admin/administrator";
-	}
-	*/
-	
 	@GetMapping("/updateStock")
 	public String updateForm(@RequestParam Long bookId, HttpSession session, Model model) {
 		User user = (User) session.getAttribute("user");

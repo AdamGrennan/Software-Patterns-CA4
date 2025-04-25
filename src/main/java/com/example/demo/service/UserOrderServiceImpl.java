@@ -72,6 +72,10 @@ public class UserOrderServiceImpl implements UserOrderService {
 	    for (CartItem item : cart.getList()) {
 	        Book book = item.getBook();
 	        int quantity = item.getQuantity();
+	        
+	        if (book.getStock() < quantity) {
+	            return "redirect:/cart/viewCart?error=not_enough_stock";
+	        }
 
 	        book.setStock(book.getStock() - quantity);
 	        bookService.updateBook(book.getId(), book);

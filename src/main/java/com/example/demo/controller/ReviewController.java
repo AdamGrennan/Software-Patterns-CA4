@@ -44,7 +44,7 @@ public class ReviewController {
     ) {
         User user = (User) session.getAttribute("user");
         reviewService.addReview(bookId, rating, comment, user);
-        return "redirect:/orders/userOrders";
+        return "redirect:/orders/viewOrders";
     }
 
 

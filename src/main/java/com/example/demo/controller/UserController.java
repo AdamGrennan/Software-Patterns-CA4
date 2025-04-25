@@ -77,6 +77,8 @@ public class UserController {
         model.addAttribute("books", books);
         model.addAttribute("user", user);
         model.addAttribute("loyaltyPoints", user.getLoyaltyPoints());
+        session.removeAttribute("promoCode");
+        session.removeAttribute("usePoints");
         return "home";
     }
    

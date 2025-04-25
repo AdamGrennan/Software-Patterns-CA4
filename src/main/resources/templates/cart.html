@@ -10,6 +10,10 @@
     Your cart is empty. Please add items before completing your order.
 </div>
 
+<div th:if="${error} == 'not_enough_stock'" class="alert alert-danger" role="alert">
+    There is not enough stock of item.
+</div>
+
 <div th:if="${error} == 'invalid_promo'" class="alert alert-danger" role="alert">
     Invalid promo code.
 </div>
