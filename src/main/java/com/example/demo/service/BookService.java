@@ -29,6 +29,5 @@ public interface BookService {
 	
 	void increaseStock(Long bookId, int quantity);
 	
-	void deleteBook(Long id);
 
 }

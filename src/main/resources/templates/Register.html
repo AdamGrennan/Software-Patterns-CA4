@@ -67,8 +67,13 @@
             <input type="text" id="address" name="shippingAddress" required />
             <br />
 
-            <label for="paymentMethod">Payment Method:</label>
-            <input type="text" id="paymentMethod" name="paymentMethod" required />
+           <select id="paymentMethod" name="paymentMethod" required>
+  <option value="">-- Select Payment Method --</option>
+  <option value="Credit Card">Credit Card</option>
+  <option value="Debit Card">Debit Card</option>
+  <option value="PayPal">PayPal</option>
+</select>
+
             <br />
         </div>
         <div id="adminKeyField" style="display: none;">

@@ -24,12 +24,6 @@
 				<button type="submit">Simulate</button>
 				</form>
 				</td>
-				<td>
-                    <form th:action="@{/admin/deleteBook}" method="post">
-					<input type="hidden" name="bookId" th:value="${book.id}" />
-					<button type="submit">Delete</button>
-					</form>
-                </td>
             </tr>
     </tbody>
 </th:block>

@@ -22,7 +22,6 @@ public class Book {
 	private int stock;
 	private double averageRating;
 	private int numberReviews;
-	private boolean isDelete = false;
 	
 	public Book() {
 		
@@ -103,12 +102,5 @@ public class Book {
 		this.numberReviews = numberReviews;
 	}
 
-	public boolean isDelete() {
-		return isDelete;
-	}
-
-	public void setDelete(boolean isDelete) {
-		this.isDelete = isDelete;
-	}
 	
 }
