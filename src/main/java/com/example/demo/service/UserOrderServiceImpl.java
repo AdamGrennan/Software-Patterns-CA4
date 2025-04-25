@@ -47,9 +47,12 @@ public class UserOrderServiceImpl implements UserOrderService {
 	    double originalTotal = cart.getTotalPrice();
 	    double discountedTotal = originalTotal;
 
-	    if (usePoints) {
+	    if (usePoints && user.getLoyaltyPoints() >= 100) {
 	        discountedTotal = new LoyaltyDiscount().applyDiscount(user, discountedTotal);
+	    } else if (usePoints) {
+	        return "redirect:/cart/viewCart?error=not_enough_points";
 	    }
+
 	    if (promoCode != null && !promoCode.isEmpty()) {
 	        discountedTotal = new PromoDiscount(promoCode).applyDiscount(user, discountedTotal);
 	    }

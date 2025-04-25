@@ -14,6 +14,11 @@
     Invalid promo code.
 </div>
 
+<div th:if="${error} == 'not_enough_points'" class="alert alert-danger" role="alert">
+    You do not have enough loyalty points to apply the discount.
+</div>
+
+
 <div th:if="${success != null and success.equals('promo_applied')}" class="alert alert-success" role="alert">
     Promo code applied.
 </div>
@@ -78,16 +83,18 @@
 </form>
 
 
-<form th:action="@{/cart/completeOrder}" method="post">
-    <input type="checkbox" id="loyaltyPoints" name="usePoints" value="true" />
+<form th:action="@{/cart/applyLoyalty}" method="post">
+    <input type="checkbox" id="loyaltyPoints" name="usePoints" value="true" onchange="this.form.submit()" />
     <label for="usePoints">Use Loyalty Points</label>
+</form>
+</br>
 
-    <br/><br/>
-
+<form th:action="@{/cart/completeOrder}" method="post">
     <button type="submit">Complete Order</button>
 </form>
 
-<br />
+
+</br>
 
 <form th:action="@{/users/home}" method="get">
     <button type="submit">Home</button>

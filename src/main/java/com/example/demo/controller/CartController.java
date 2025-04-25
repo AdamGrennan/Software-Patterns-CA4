@@ -98,6 +98,13 @@ public class CartController {
 	        return "redirect:/cart/viewCart?error=invalid_promo";
 	    }
 	}
+	
+	@PostMapping("/applyLoyalty")
+	public String applyLoyalty(@RequestParam(defaultValue = "false") boolean usePoints, HttpSession session) {
+	    session.setAttribute("usePoints", usePoints);
+	    return "redirect:/cart/viewCart";
+	}
+
 
 
 
